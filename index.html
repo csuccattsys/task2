@@ -3,367 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Lost Amulet of Rhetoric - Grade 7 Game</title>
+    <title>Rhetoric Arena: Battle for Cabadbaran</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons Vector Framework -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0c1910;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
         }
-        .fantasy-title {
-            font-family: 'Cinzel', serif;
+        .hud-font {
+            font-family: 'Orbitron', sans-serif;
         }
-        /* Custom Keyframe Game Animations */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Custom Keyframe Animations for Physics and Hits */
+        @keyframes damageFlash {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(239, 68, 68, 0.4); }
         }
-        .animate-slide-up {
-            animation: slideUp 0.4s ease-out forwards;
+        .animate-flash {
+            animation: damageFlash 0.3s ease-in-out 2;
         }
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         .animate-float {
-            animation: float 3s infinite ease-in-out;
+            animation: float 4s infinite ease-in-out;
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
+        @keyframes enemySpawn {
+            from { opacity: 0; transform: scale(0.6) rotate(-10deg); filter: brightness(2); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1); }
         }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out;
-        }
-        /* Style for active highlighted clues inside text */
-        .clue-highlight {
-            border-bottom: 2px dashed #eab308;
-            color: #fde047;
-            font-weight: bold;
-            padding: 0 2px;
+        .animate-spawn {
+            animation: enemySpawn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-2 md:p-6 select-none">
 
-<div id="game-viewport" class="w-full max-w-4xl bg-stone-900 border-4 border-amber-600 rounded-3xl shadow-2xl overflow-hidden relative flex flex-col md:flex-row h-[600px]">
+<div id="game-arena" class="w-full max-w-4xl bg-slate-900 border-2 border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden relative flex flex-col h-[640px]">
     
-    <div class="w-full md:w-1/2 bg-gradient-to-b from-emerald-950 to-stone-950 relative border-b-4 md:border-b-0 md:border-r-4 border-amber-600 flex flex-col justify-between p-4">
-        
-        <div class="flex items-center justify-between z-10">
-            <div class="flex items-center gap-2 bg-black/40 border border-white/10 px-3 py-1.5 rounded-xl">
-                <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
-                <span class="text-xs font-bold text-amber-200 uppercase tracking-wider">XP: <span id="game-xp">0</span></span>
+    <!-- TOP HUD: Real-time Interactive Combat Status -->
+    <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4 z-10">
+        <!-- Player Vitramins -->
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-500/10">
+                <i data-lucide="shield-user" class="w-5 h-5"></i>
             </div>
-            <div class="flex items-center gap-2 bg-black/40 border border-white/10 px-3 py-1.5 rounded-xl">
-                <i data-lucide="heart" class="w-4 h-4 text-red-500 fill-red-500"></i>
-                <span class="text-xs font-bold text-red-200 uppercase tracking-wider">Hearts: <span id="game-hearts">3</span></span>
-            </div>
-        </div>
-
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-12">
-            <div id="avatar-container" class="animate-float flex flex-col items-center gap-4 transition-all duration-300">
-                <div class="p-6 bg-emerald-900/40 border-2 border-emerald-500/30 rounded-full bg-blur shadow-2xl shadow-emerald-500/20">
-                    <i id="scene-icon" data-lucide="castle" class="w-20 h-20 text-emerald-400"></i>
-                </div>
-                <div id="avatar-label" class="bg-black/60 border border-emerald-500/40 px-4 py-1 rounded-full text-xs font-bold text-emerald-300 uppercase tracking-widest">
-                    Cabadbaran Ruins
+            <div>
+                <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400 hud-font">Player HP</div>
+                <div class="w-32 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700 mt-1">
+                    <div id="player-hp-bar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-100 transition-all duration-300"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-black/60 backdrop-blur-md border border-white/10 p-4 rounded-xl z-10">
-            <div class="text-[10px] uppercase font-bold text-amber-500 tracking-widest mb-1" id="scene-node-tag">Node 01</div>
-            <p id="scene-narrative" class="text-xs md:text-sm text-stone-200 font-medium leading-relaxed italic">
-                Loading game coordinates...
-            </p>
+        <!-- Combo Score / Streak Multiplier -->
+        <div class="flex items-center gap-6">
+            <div class="text-center">
+                <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400 hud-font">Score</div>
+                <div id="score-val" class="text-xl font-black text-amber-400 hud-font">0000</div>
+            </div>
+            <div class="bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-center min-w-[70px]">
+                <div class="text-[9px] uppercase font-black text-emerald-400 hud-font tracking-tight">Streak</div>
+                <div id="streak-val" class="text-base font-black text-white hud-font">x0</div>
+            </div>
         </div>
 
+        <!-- Enemy Vitramins -->
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400 hud-font">Guardian Armor</div>
+                <div class="w-32 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700 mt-1 flex justify-end">
+                    <div id="enemy-hp-bar" class="bg-gradient-to-r from-red-500 to-pink-500 h-full w-100 transition-all duration-300"></div>
+                </div>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 shadow-lg shadow-red-500/10">
+                <i data-lucide="swords" class="w-5 h-5"></i>
+            </div>
+        </div>
     </div>
 
-    <div class="w-full md:w-1/2 bg-stone-950 p-6 flex flex-col justify-between h-full relative overflow-y-auto">
+    <!-- MAIN BATTLEFIELD VIEW (Interactive Arena Graphics Floor) -->
+    <div id="combat-floor" class="flex-1 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 relative p-6 flex flex-col justify-between overflow-hidden">
         
-        <div id="interactive-deck" class="space-y-6 my-auto">
-            <div class="space-y-1">
-                <h2 id="challenge-title" class="text-xl font-bold text-white tracking-tight font-fantasy text-amber-500">The Trial of Identity</h2>
-                <p id="challenge-instructions" class="text-xs text-stone-400 font-semibold">Examine the riddle carefully and project the correct device.</p>
-            </div>
+        <!-- Interactive Clue Scanner Deck Overlays -->
+        <div class="absolute top-4 left-4 z-10 flex gap-2">
+            <button id="btn-scan" class="flex items-center gap-1.5 px-3 py-2 bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-950/20 rounded-xl text-xs font-bold text-cyan-400 transition-all shadow-lg backdrop-blur-md">
+                <i data-lucide="scan-eye" class="w-4 h-4 animate-pulse"></i>
+                <span>Deploy X-Ray Scanner</span>
+            </button>
+        </div>
 
-            <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 relative shadow-inner">
-                <div class="absolute -top-2.5 left-4 bg-amber-600 text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow">Riddle Text</div>
-                <p id="riddle-box" class="text-sm md:text-base text-stone-100 font-bold leading-relaxed pt-2"></p>
+        <!-- Dynamic Monster Graphic Representation Frame -->
+        <div class="flex-1 flex flex-col items-center justify-center my-4 animate-float">
+            <div id="enemy-sprite-container" class="relative group">
+                <!-- Target Lock Indicator Rings -->
+                <div class="absolute inset-0 border border-dashed border-red-500/30 rounded-full scale-125 animate-spin [animation-duration:20s]"></div>
+                <div class="absolute inset-0 border border-dotted border-cyan-500/20 rounded-full scale-150 animate-spin [animation-duration:35s] [animation-direction:reverse]"></div>
                 
-                <button id="btn-hint" class="mt-3 flex items-center gap-1.5 text-xs text-amber-500 font-bold hover:text-amber-400 transition-colors focus:outline-none">
-                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
-                    <span>Consult Spellbook Hint</span>
-                </button>
-                <p id="hint-display" class="hidden mt-2 text-xs text-stone-400 border-t border-stone-800 pt-2 italic font-medium leading-relaxed"></p>
-            </div>
-
-            <div id="choices-container" class="flex flex-col gap-3"></div>
-        </div>
-
-        <div id="learning-modal" class="hidden absolute inset-x-0 bottom-0 top-0 bg-stone-950/95 p-6 flex flex-col justify-between z-20 animate-slide-up border-t-4 border-amber-600">
-            <div class="space-y-4">
-                <div class="flex items-center gap-3">
-                    <div id="modal-icon-bg" class="p-2.5 rounded-xl text-white">
-                        <i id="modal-icon" data-lucide="shield-alert" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <span id="modal-status-tag" class="text-[10px] font-black tracking-widest uppercase block">Result Feedback</span>
-                        <h4 id="modal-heading" class="text-lg font-extrabold text-white">Heading Title</h4>
-                    </div>
-                </div>
-
-                <p id="modal-feedback-text" class="text-sm text-stone-300 leading-relaxed font-medium"></p>
-
-                <div class="bg-stone-900 border border-stone-800 rounded-xl p-4 space-y-2">
-                    <h5 class="text-xs font-bold text-amber-500 uppercase tracking-wider flex items-center gap-1.5">
-                        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
-                        Spellbook Rule Explanation
-                    </h5>
-                    <p id="modal-rule-text" class="text-xs text-stone-400 leading-relaxed font-medium"></p>
+                <div id="enemy-avatar-wrapper" class="p-8 bg-slate-900/80 border-2 border-red-500/40 rounded-full shadow-2xl shadow-red-500/10 backdrop-blur-sm animate-spawn">
+                    <i id="enemy-icon" data-lucide="bot-off" class="w-20 h-20 text-red-400 drop-shadow-[0_0_15px_rgba(239,68,68,0.3)]"></i>
                 </div>
             </div>
+            <h3 id="enemy-name" class="text-sm font-black text-red-400 uppercase tracking-widest mt-4 hud-font">Rhetoric Sentinel v1.0</h3>
+        </div>
 
-            <div class="flex justify-end pt-4">
-                <button id="modal-action-btn" class="flex items-center gap-2 text-stone-950 font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-600/10 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
-                    <span id="modal-btn-label">Action</span>
-                    <i id="modal-btn-icon" data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
+        <!-- Central Display Panel: The Sentence Engine Core -->
+        <div class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-2xl backdrop-blur-md relative z-10">
+            <div class="absolute -top-3 left-6 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded border border-indigo-400 shadow-md">Intercepted Inscription</div>
+            <p id="riddle-string" class="text-base md:text-lg text-slate-100 font-bold tracking-wide leading-relaxed pt-1 select-text"></p>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE CONTROL BOARD: Weapon Matrix Deck -->
+    <div class="bg-slate-950 border-t border-slate-800 p-6 z-10">
+        <div class="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest mb-3 hud-font">Select Targeting Sub-Routine ammunition:</div>
+        <div id="attack-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Programmatic Target Actions will render here -->
+        </div>
+    </div>
+
+    <!-- INTERACTIVE LEARNING & ANALYSIS PANEL (Slide-Up Shield Overlay) -->
+    <div id="learning-terminal" class="hidden absolute inset-0 bg-slate-950/98 z-20 p-6 flex flex-col justify-between border-t-4 border-indigo-500 animate-spawn">
+        <div class="space-y-6">
+            <!-- Diagnostic Header Status -->
+            <div class="flex items-center gap-4 border-b border-slate-800 pb-4">
+                <div id="term-status-badge" class="p-3 rounded-2xl text-white shadow-xl">
+                    <i id="term-status-icon" data-lucide="activity"></i>
+                </div>
+                <div>
+                    <span id="term-category" class="text-[10px] font-black tracking-widest uppercase hud-font block text-indigo-400">Analysis Feed</span>
+                    <h4 id="term-title" class="text-xl font-black text-white tracking-tight">Diagnostic Sub-Routine</h4>
+                </div>
+            </div>
+
+            <!-- Descriptive Readout Frame -->
+            <div class="space-y-2">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider hud-font">Combat Log Feedback</div>
+                <p id="term-log-text" class="text-slate-300 text-sm leading-relaxed font-medium bg-slate-900 border border-slate-800 p-4 rounded-xl italic"></p>
+            </div>
+
+            <!-- Conceptual Core Learning Card Module -->
+            <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-2xl p-5 space-y-3 shadow-inner relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+                    <i data-lucide="graduation-cap" class="w-32 h-32 text-indigo-400"></i>
+                </div>
+                <h5 class="text-xs font-black text-indigo-400 uppercase tracking-wider flex items-center gap-2 hud-font">
+                    <i data-lucide="database-zap" class="w-4 h-4"></i>
+                    Cognitive Rule Index & Syntax Formula
+                </h5>
+                <p id="term-rule-text" class="text-xs md:text-sm text-slate-300 leading-relaxed font-medium"></p>
             </div>
         </div>
 
+        <!-- Terminal Nav Action Footer -->
+        <div class="flex justify-end pt-4 border-t border-slate-900">
+            <button id="term-action-btn" class="flex items-center gap-2 text-slate-950 font-black text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl shadow-xl transform active:scale-95 transition-all">
+                <span id="term-btn-label">Continue Engage</span>
+                <i id="term-btn-icon" data-lucide="play"></i>
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
-    // Pure Game Dataset Engine Mapping Imagery, Choices, and Learning Explanations
-    const gameEngineMatrix = {
+    // Structural Data Engine Matrix containing Game Scripts, Challenges, and Linguistic Framework Rules
+    const combatDataMatrix = {
         1: {
-            nodeTag: "Trial Phase 01",
-            title: "Gate of the Forest Guardian",
-            icon: "castle",
-            avatarLabel: "Cabadbaran Ruins Gate",
-            narrative: "An ancient, moss-covered stone sentinel blocks the passage. 'To enter the sanctuary, you must decrypt the phrase upon my chest!'",
-            riddle: "“The classroom <span class='clue-target'>was a zoo</span> during recess.”",
-            hint: "Look closely at 'was a zoo'. It does not use 'like' or 'as' to create a comparison. It directly equates the room to a zoo.",
-            clueText: "“The classroom <span class='clue-highlight'>was a zoo</span> during recess.”",
-            choices: [
-                {
-                    text: "Cast a Simile Spell Key",
-                    status: "trap",
-                    heading: "Spell Shield Triggered!",
-                    icon: "shield-alert",
-                    bg: "bg-red-600",
-                    feedback: "The gate glows crimson! The sentinel booms: 'Incorrect casting! A Simile forces clear bridge markers like \"like\" or \"as\". This phrase has no matching connectors!'",
-                    rule: "Similes make descriptions explicit by joining separate concepts using comparative connector keywords. For instance: 'The classroom was LIKE a zoo'."
-                },
-                {
-                    text: "Cast a Metaphor Spell Key",
-                    status: "success",
-                    heading: "Barrier Shattered!",
-                    icon: "sparkles",
-                    bg: "bg-emerald-600",
-                    feedback: "The sentinel transforms into safe green light! 'Magnificent grammar insight! You identified a direct equation of state without relying on structural bridges.'",
-                    rule: "Metaphors match two completely separate terms directly to carry descriptions immediately. Calling a wild room a 'zoo' paints a picture cleanly.",
-                    xpReward: 100,
-                    jump: 2
-                }
+            enemyName: "Goliath Sentinel v1.0",
+            icon: "bot",
+            inscription: "“The class was <span class='text-slate-400 font-medium underline decoration-dashed decoration-slate-600'>a collection of wild animals</span> during recess.”",
+            scanned: "“The class <span class='text-cyan-400 font-black underline decoration-2 decoration-cyan-500 bg-cyan-950/40 px-1 rounded'>was a collection of wild animals</span> during recess.”",
+            hint: "Notice the sentence directly substitutes the classroom's identity. It maps the sensory attributes of animals straight onto the students without structural 'like/as' comparison blocks.",
+            weapons: [
+                { type: "Simile Bolt", state: "fail", title: "Target Mismatch Error", log: "Impact structural deflection! The Simile analysis subroutine found no explicit comparative connector tags (like, as) embedded within the target phrase structure.", rule: "Similes require direct relational anchor points (e.g., 'The class acted LIKE wild animals') to link concepts. Because this anchor point is completely missing, the simile array failed to synchronize." },
+                { type: "Metaphor Core", state: "hit", title: "Structural Target Cleared!", log: "Direct Critical Impact! The system confirmed a direct equation model. The context is perfectly swapped into a secondary form natively.", rule: "Metaphors directly declare that one entity *is* or *was* another symbol to apply descriptive traits seamlessly. It merges the subject into the image immediately.", damage: 50 },
+                { type: "Personification Array", state: "fail", title: "Category Mismatch Error", log: "Shields held perfectly! Personification requires giving human mental capabilities or vocal abilities to objects. The targets here are already human students.", rule: "Personification maps uniquely human actions or characteristics onto non-human targets (e.g., 'The wind wept'). Since this statement maps animals onto human students, personification rules do not apply." }
             ]
         },
         2: {
-            nodeTag: "Trial Phase 02",
-            title: "The Courtyard of Echoes",
+            enemyName: "Vortex Air-Fiend v2.4",
             icon: "wind",
-            avatarLabel: "Whispering Woods",
-            narrative: "A magical vortex blocks the courtyard bridge. Swirling leaves organize themselves into an active sentence pattern before you.",
-            riddle: "“The autumn leaves scraped across the pavement, <span class='clue-target'>whispering secrets</span> to the wind.”",
-            hint: "Can ordinary autumn leaves physically whisper secrets to each other? Who usually whispers?",
-            clueText: "“The autumn leaves scraped across the pavement, <span class='clue-highlight'>whispering secrets</span> to the wind.”",
-            choices: [
-                {
-                    text: "Channel Personification Essence",
-                    status: "success",
-                    heading: "Vortex Pacified!",
-                    icon: "sparkles",
-                    bg: "bg-emerald-600",
-                    feedback: "The storm winds clear into safe directional path markers! 'Spot on, traveler! You accurately identified human vocal characteristics instilled into lifeless nature.'",
-                    rule: "Personification maps human behaviors, actions, or mental attributes directly onto plants, animals, or objects to bring descriptions to life.",
-                    xpReward: 100,
-                    jump: 3
-                },
-                {
-                    text: "Channel Metaphor Essence",
-                    status: "trap",
-                    heading: "Elemental Backlash!",
-                    icon: "shield-alert",
-                    bg: "bg-red-600",
-                    feedback: "The vortex blasts you backward! 'Error! The sentence doesn't state that the leaves ARE humans; it gives them human-exclusive actions!'",
-                    rule: "A metaphor substitutes identity directly (e.g., 'The leaves were whispered ghosts'). When objects simply perform human actions, it falls under personification rules."
-                }
+            inscription: "“The old engines groan and <span class='text-slate-400 font-medium underline decoration-dashed decoration-slate-600'>protest out loud</span> whenever we accelerate.”",
+            scanned: "“The old engines <span class='text-cyan-400 font-black underline decoration-2 decoration-cyan-500 bg-cyan-950/40 px-1 rounded'>groan and protest out loud</span> whenever we accelerate.”",
+            hint: "Can regular steel engine parts literally feel discomfort, groan, or express vocal social protest? Who usually performs those actions?",
+            weapons: [
+                { type: "Metaphor Core", state: "fail", title: "Category Mismatch Error", log: "Impact absorbed by defense shield! The weapon tried to map identity substitution, but the target sentence tracks an operational performance loop instead.", rule: "Metaphors change identity parameters completely (e.g., 'The engine is a roaring beast'). This challenge highlights an operational action state instead, calling for action-centric properties." },
+                { type: "Personification Array", state: "hit", title: "Target Structure Cleared!", log: "Direct Hit! The automated arrays validated human-exclusive social behaviors and indicators successfully linked with a machine element.", rule: "Personification breathes life into inanimate targets by applying unique human physical actions (groaning, protesting, speaking) to mechanical items or objects.", damage: 50 },
+                { type: "Simile Bolt", state: "fail", title: "Target Mismatch Error", log: "Systems conflict! The syntax engine searched for explicit relational connector blocks, but returned an empty array response.", rule: "Similes bridge items using connector codes like 'as' or 'like'. Without those markers present, the simile tracking loop fails." }
             ]
         },
         3: {
-            nodeTag: "Final Core Chamber",
-            title: "The Treasury Golem Vault",
+            enemyName: "Core Crypt Overlord",
             icon: "box",
-            avatarLabel: "The Amulet Vault",
-            narrative: "A massive mechanical golem protects the treasure chest. It stamps its feet and challenges you to one final validation test.",
-            riddle: "“I am so hungry I <span class='clue-target'>could eat an entire elephant</span> right now!”",
-            hint: "Is it physically, biologically possible for a human being to digest a whole elephant? Or is it an intentional exaggeration?",
-            clueText: "“I am so hungry I <span class='clue-highlight'>could eat an entire elephant</span> right now!”",
-            choices: [
-                {
-                    text: "Deploy a Simile Core",
-                    status: "trap",
-                    heading: "Systems Overload!",
-                    icon: "shield-alert",
-                    bg: "bg-red-600",
-                    feedback: "The golem charges its weapon system! 'Mismatched properties! There are no explicit connective syntax structures embedded inside this expression!'",
-                    rule: "Similes explicitly connect terms using structural flags ('as' / 'like'). Without those terms present, simile verification algorithms fail."
-                },
-                {
-                    text: "Deploy a Hyperbole Core",
-                    status: "success",
-                    heading: "The Ancient Amulet Unlocked!",
-                    icon: "trophy",
-                    bg: "bg-amber-500",
-                    feedback: "The golempowers down and safely slides away. 'Incredible analysis! You unlocked the safe path by exposing my massive structural exaggeration.'",
-                    rule: "Hyperbole uses intentional exaggeration to emphasize strong feelings or create a dramatic effect. Eating an elephant emphasizes extreme hunger.",
-                    xpReward: 150,
-                    jump: "end"
-                }
+            inscription: "“This text packet weighs <span class='text-slate-400 font-medium underline decoration-dashed decoration-slate-600'>a literal million tons</span>; my arms are snapped.”",
+            scanned: "“This text packet weighs <span class='text-cyan-400 font-black underline decoration-2 decoration-cyan-500 bg-cyan-950/40 px-1 rounded'>a literal million tons</span>; my arms are snapped.”",
+            hint: "Examine physical weight constraints. Can a packet of papers physically measure a million tons or shatter human bones? Is it scaling reality up to show intense emotion?",
+            weapons: [
+                { type: "Simile Bolt", state: "fail", title: "Target Mismatch Error", log: "Deflection recorded! The syntax analyzer discovered zero comparative connector nodes embedded inside the structural text parameters.", rule: "A simile compares terms proportionally using structural flags. Without explicit keywords like 'like' or 'as' tying the weights together, a simile configuration cannot form." },
+                { type: "Personification Array", state: "fail", title: "Category Mismatch Error", log: "Impact absorbed! The object does not take on human social intelligence or performance actions. It simply outlines an abstract measure of physical property scale.", rule: "Personification requires objects to act out distinctly human identities. Simple changes to weight metrics, even extreme ones, do not count as human actions or behaviors." },
+                { type: "Hyperbole Drive", state: "hit", title: "Boss Armor Eradicated!", log: "Critical Shockwave Implosion! The terminal isolated a massive distortion of literal fact used specifically to emphasize scale and frustration.", rule: "Hyperbole uses intentional exaggeration to magnify emotional realities. By creating impossible physical scales (a million tons), it emphasizes a heavy object.", damage: 100 }
             ]
         }
     };
 
-    let activeStateNode = 1;
-    let accumulatedXP = 0;
-    let userHeartsRemaining = 3;
+    // Tracking Systems Configuration
+    let activeLevelNode = 1;
+    let scoreAccumulated = 0;
+    let comboStreakMultiplier = 0;
+    let trackerPlayerHP = 100;
+    let trackerEnemyHP = 100;
+    let xRayScannerActivated = false;
 
-    function renderActiveGameStage(nodeId) {
+    function renderActiveCombatFrame(levelId) {
         setTimeout(() => lucide.createIcons(), 5);
 
-        if(nodeId === 'end') {
-            document.getElementById('interactive-deck').innerHTML = `
-                <div class="text-center py-12 animate-slide-up space-y-4">
-                    <div class="inline-flex p-4 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-500 mb-2">
-                        <i data-lucide="trophy" class="w-16 h-16"></i>
-                    </div>
-                    <h2 class="text-2xl font-black text-white font-fantasy uppercase tracking-wider text-amber-500">Victory Confirmed!</h2>
-                    <p class="text-stone-300 text-sm leading-relaxed max-w-sm mx-auto">Sensational performance! You conquered all linguistic chambers, completed the Grade 7 learning matrix, and finished with a grand total of ${accumulatedXP} XP!</p>
+        // Core Victory Check Loop
+        if (levelId === "victory") {
+            document.getElementById('learning-terminal').remove();
+            document.getElementById('attack-grid').innerHTML = "";
+            document.getElementById('btn-scan').remove();
+            
+            document.getElementById('enemy-name').innerText = "SYSTEM SECURED";
+            document.getElementById('enemy-avatar-wrapper').className = "p-8 bg-emerald-500/10 border-2 border-emerald-500 text-emerald-400 rounded-full shadow-2xl shadow-emerald-500/20";
+            document.getElementById('enemy-icon').setAttribute('data-lucide', 'shield-check');
+            
+            document.getElementById('riddle-string').innerHTML = `
+                <div class='text-center py-4 space-y-2'>
+                    <span class='text-emerald-400 font-black uppercase text-sm block tracking-widest hud-font'>Arena Conquered!</span>
+                    <span class='text-sm text-slate-300 font-semibold block'>All Grade 7 figures of speech checkpoints successfully analyzed. Your terminal operations are operating at peak logic metrics.</span>
                 </div>
             `;
-            // Final Game State Art Update
-            document.getElementById('scene-icon').setAttribute('data-lucide', 'award');
-            document.getElementById('avatar-label').innerText = "Quest Master";
-            document.getElementById('scene-node-tag').innerText = "Complete";
-            document.getElementById('scene-narrative').innerText = "The Amulet of Rhetoric safely power links with your avatar system.";
             setTimeout(() => lucide.createIcons(), 5);
             return;
         }
 
-        const dataNode = gameEngineMatrix[nodeId];
+        const dataNode = combatDataMatrix[levelId];
 
-        // Update Visual Stage Graphics Metadata
-        document.getElementById('scene-node-tag').innerText = dataNode.nodeTag;
-        document.getElementById('scene-narrative').innerText = dataNode.narrative;
-        document.getElementById('avatar-label').innerText = dataNode.avatarLabel;
-        document.getElementById('scene-icon').setAttribute('data-lucide', dataNode.icon);
+        // Setup Graphics parameters
+        document.getElementById('enemy-name').innerText = dataNode.enemyName;
+        document.getElementById('enemy-icon').setAttribute('data-lucide', dataNode.icon);
+        
+        // Sync Scanner View states cleanly
+        document.getElementById('riddle-string').innerHTML = xRayScannerActivated ? dataNode.scanned : dataNode.inscription;
 
-        // Update Interactive Interface Deck Text fields
-        document.getElementById('challenge-title').innerText = dataNode.title;
-        document.getElementById('riddle-box').innerHTML = dataNode.riddle;
-        document.getElementById('hint-display').innerText = dataNode.hint;
-        document.getElementById('hint-display').classList.add('hidden');
+        // Reset Armor/Health Bars for New Monsters
+        trackerEnemyHP = 100;
+        document.getElementById('enemy-hp-bar').style.width = `${trackerEnemyHP}%`;
 
-        // Render Action Selection Buttons
-        const choiceDeck = document.getElementById('choices-container');
-        choiceDeck.innerHTML = "";
+        // Render Weapon Action Control Buttons
+        const buttonGrid = document.getElementById('attack-grid');
+        buttonGrid.innerHTML = "";
 
-        dataNode.choices.forEach(choice => {
+        dataNode.weapons.forEach(wpn => {
             const btn = document.createElement('button');
-            btn.className = "w-full text-left bg-stone-900 border-2 border-stone-800 hover:border-amber-600 hover:bg-stone-850 p-4 rounded-xl font-bold text-stone-200 text-sm transition-all flex items-center justify-between group active:scale-[0.99]";
+            btn.className = "bg-slate-900 hover:bg-indigo-950/40 border-2 border-slate-800 hover:border-indigo-500 px-4 py-3.5 rounded-xl text-xs font-black text-slate-200 hud-font tracking-wider uppercase transition-all flex items-center justify-between group active:scale-95";
             btn.innerHTML = `
-                <span>${choice.text}</span>
-                <i data-lucide="crosshair" class="w-4 h-4 text-stone-500 group-hover:text-amber-500 transition-colors"></i>
+                <span>${wpn.type}</span>
+                <i data-lucide="crosshair" class="w-4 h-4 text-slate-600 group-hover:text-indigo-400 group-hover:rotate-45 transition-all"></i>
             `;
-            btn.onclick = () => evaluateUserGameAction(choice);
-            choiceDeck.appendChild(btn);
+            btn.onclick = () => fireWeaponRoutine(wpn);
+            buttonGrid.appendChild(btn);
         });
 
         setTimeout(() => lucide.createIcons(), 5);
     }
 
-    function evaluateUserGameAction(choice) {
-        const modal = document.getElementById('learning-modal');
-        const modalIconBg = document.getElementById('modal-icon-bg');
-        const actionBtn = document.getElementById('modal-action-btn');
+    function fireWeaponRoutine(weapon) {
+        const modal = document.getElementById('learning-terminal');
+        const badge = document.getElementById('term-status-badge');
+        const icon = document.getElementById('term-status-icon');
+        const actionBtn = document.getElementById('term-action-btn');
 
-        // Apply text variables to modal layout
-        document.getElementById('modal-heading').innerText = choice.heading;
-        document.getElementById('modal-feedback-text').innerText = choice.feedback;
-        document.getElementById('modal-rule-text').innerText = choice.rule;
+        // Apply textual readouts across terminal components
+        document.getElementById('term-title').innerText = weapon.title;
+        document.getElementById('term-log-text').innerText = weapon.log;
+        document.getElementById('term-rule-text').innerText = weapon.rule;
 
-        // Apply custom color theme states
-        modalIconBg.className = `p-2.5 rounded-xl text-white ${choice.bg}`;
-        document.getElementById('modal-icon').setAttribute('data-lucide', choice.icon);
+        if (weapon.state === "hit") {
+            // Calculate Damage Values on Enemy Health
+            trackerEnemyHP -= weapon.damage;
+            document.getElementById('enemy-hp-bar').style.width = `${trackerEnemyHP}%`;
 
-        if(choice.status === "success") {
-            // Success Path logic
-            accumulatedXP += choice.xpReward;
-            document.getElementById('game-xp').innerText = accumulatedXP;
-
-            document.getElementById('modal-status-tag').innerText = "System Synchronized";
-            document.getElementById('modal-status-tag').className = "text-[10px] font-black tracking-widest uppercase block text-emerald-500";
+            // Adjust Combat Multipliers
+            comboStreakMultiplier++;
+            scoreAccumulated += (100 * comboStreakMultiplier);
             
-            actionBtn.className = "flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-stone-950 font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-600/20 transition-all transform hover:-translate-y-0.5";
-            document.getElementById('modal-btn-label').innerText = "Advance Path";
-            document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'arrow-right');
+            // Sync HUD displays
+            document.getElementById('streak-val').innerText = `x${comboStreakMultiplier}`;
+            document.getElementById('score-val').innerText = String(scoreAccumulated).padStart(4, '0');
+
+            // Set success styling
+            badge.className = "p-3 rounded-2xl bg-emerald-600 shadow-lg shadow-emerald-600/20 text-white animate-pulse";
+            icon.setAttribute('data-lucide', 'shield-check');
+            document.getElementById('term-category').innerText = "Impact Sync Confirmed";
+            document.getElementById('term-category').className = "text-[10px] font-black tracking-widest uppercase hud-font block text-emerald-400";
+
+            actionBtn.className = "flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs uppercase tracking-widest px-6 py-4 rounded-xl shadow-xl shadow-emerald-500/10";
+            document.getElementById('term-btn-label').innerText = "Execute Next Infiltration";
+            document.getElementById('term-btn-icon').setAttribute('data-lucide', 'skip-forward');
 
             actionBtn.onclick = () => {
                 modal.classList.add('hidden');
-                activeStateNode = choice.jump;
-                renderActiveGameStage(activeStateNode);
+                // Deactivate clue scanner state when transitioning scenes to prompt student observation
+                if (xRayScannerActivated) {
+                    document.getElementById('btn-scan').click();
+                }
+                activeLevelNode = (activeLevelNode === Object.keys(combatDataMatrix).length) ? "victory" : activeLevelNode + 1;
+                renderActiveCombatFrame(activeLevelNode);
             };
+
         } else {
-            // Trap path logic
-            userHeartsRemaining--;
-            document.getElementById('game-hearts').innerText = userHeartsRemaining;
-            
-            // Trigger haptic vibration effect
-            document.getElementById('game-viewport').classList.add('animate-shake');
-            setTimeout(() => document.getElementById('game-viewport').classList.remove('animate-shake'), 400);
+            // Apply Damage Penalties to Player Health
+            trackerPlayerHP -= 25;
+            document.getElementById('player-hp-bar').style.width = `${trackerPlayerHP}%`;
 
-            document.getElementById('modal-status-tag').innerText = "Warning Malfunction";
-            document.getElementById('modal-status-tag').className = "text-[10px] font-black tracking-widest uppercase block text-red-500";
+            // Reset Combos
+            comboStreakMultiplier = 0;
+            document.getElementById('streak-val').innerText = `x${comboStreakMultiplier}`;
 
-            if(userHeartsRemaining <= 0) {
-                // Game Over Loop State
-                document.getElementById('modal-heading').innerText = "Critical System Failure";
-                document.getElementById('modal-feedback-text').innerText = "Your hearts have depleted completely. The grammar defense arrays locked your avatar out of the archive system.";
-                document.getElementById('modal-btn-label').innerText = "Restart Mission";
-                document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'refresh-cw');
-                actionBtn.className = "flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg transition-all";
+            // Trigger visual hit effect on viewport floor
+            document.getElementById('combat-floor').classList.add('animate-flash');
+            setTimeout(() => document.getElementById('combat-floor').classList.remove('animate-flash'), 600);
+
+            // Set trap styling
+            badge.className = "p-3 rounded-2xl bg-red-600 shadow-lg shadow-red-600/20 text-white";
+            icon.setAttribute('data-lucide', 'shield-alert');
+            document.getElementById('term-category').innerText = "Deflection Alert Fault";
+            document.getElementById('term-category').className = "text-[10px] font-black tracking-widest uppercase hud-font block text-red-400";
+
+            if (trackerPlayerHP <= 0) {
+                // Game Over Terminal Trigger Routine
+                document.getElementById('term-title').innerText = "System Defeated";
+                document.getElementById('term-log-text').innerText = "The syntax guardian overrode your terminal links. Your core files have dropped to critical levels.";
+                document.getElementById('term-btn-label').innerText = "Reboot Terminal System";
+                document.getElementById('term-btn-icon').setAttribute('data-lucide', 'refresh-cw');
+                actionBtn.className = "flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-widest px-6 py-4 rounded-xl shadow-xl shadow-red-600/20";
                 
                 actionBtn.onclick = () => {
-                    userHeartsRemaining = 3;
-                    accumulatedXP = 0;
-                    activeStateNode = 1;
-                    document.getElementById('game-hearts').innerText = userHeartsRemaining;
-                    document.getElementById('game-xp').innerText = accumulatedXP;
+                    trackerPlayerHP = 100;
+                    scoreAccumulated = 0;
+                    comboStreakMultiplier = 0;
+                    activeLevelNode = 1;
+                    document.getElementById('player-hp-bar').style.width = `${trackerPlayerHP}%`;
+                    document.getElementById('streak-val').innerText = `x0`;
+                    document.getElementById('score-val').innerText = "0000";
                     modal.classList.add('hidden');
-                    renderActiveGameStage(activeStateNode);
+                    if (xRayScannerActivated) {
+                        document.getElementById('btn-scan').click();
+                    }
+                    renderActiveCombatFrame(activeLevelNode);
                 };
             } else {
-                // Standard retry step
-                document.getElementById('modal-btn-label').innerText = "Recalibrate Array";
-                document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'rotate-ccw');
-                actionBtn.className = "flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold text-sm px-6 py-3 rounded-xl border border-stone-700 transition-all";
+                // Standard retry sequence
+                document.getElementById('term-btn-label').innerText = "Recalibrate Capacitors";
+                document.getElementById('term-btn-icon').setAttribute('data-lucide', 'rotate-ccw');
+                actionBtn.className = "flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-xs uppercase tracking-widest px-6 py-4 rounded-xl";
                 
                 actionBtn.onclick = () => modal.classList.add('hidden');
             }
@@ -373,18 +372,33 @@
         setTimeout(() => lucide.createIcons(), 5);
     }
 
-    // Connect Hint Activation Actions
-    document.getElementById('btn-hint').onclick = function() {
-        const hb = document.getElementById('hint-display');
-        hb.classList.toggle('hidden');
+    // Connect X-Ray Analysis Scanner Controls
+    document.getElementById('btn-scan').onclick = function() {
+        xRayScannerActivated = !xRayScannerActivated;
+        this.classList.toggle('border-cyan-500/40');
+        this.classList.toggle('border-cyan-400');
+        this.classList.toggle('bg-cyan-950/40');
+        this.classList.toggle('text-cyan-300');
+
+        const activeNode = combatDataMatrix[activeLevelNode];
+        // Instantly alter content mapping types based on interactive scanner modes
+        document.getElementById('riddle-string').innerHTML = xRayScannerActivated ? activeNode.scanned : activeNode.inscription;
         
-        // Dynamic string substitution to trigger custom visual text highlight
-        const activeNode = gameEngineMatrix[activeStateNode];
-        document.getElementById('riddle-box').innerHTML = hb.classList.contains('hidden') ? activeNode.riddle : activeNode.clueText;
+        // Render or hide custom strategy prompts inside log feed windows
+        if(xRayScannerActivated) {
+            const hintBox = document.createElement('div');
+            hintBox.id = "temp-hint-panel";
+            hintBox.className = "mt-3 p-3 bg-cyan-950/20 border border-cyan-500/20 rounded-xl text-xs text-cyan-300 font-medium leading-relaxed animate-spawn";
+            hintBox.innerHTML = `<strong>Scanner Diagnostic Clue:</strong> ${activeNode.hint}`;
+            document.getElementById('riddle-string').appendChild(hintBox);
+        } else {
+            const existingHint = document.getElementById('temp-hint-panel');
+            if (existingHint) existingHint.remove();
+        }
     };
 
-    // Bootstrap Entry Ignition Hook
-    renderActiveGameStage(activeStateNode);
+    // Initialize application execution engine
+    renderActiveCombatFrame(activeLevelNode);
 </script>
 
 </body>
