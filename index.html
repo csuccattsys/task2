@@ -3,288 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 2: Interactive Language Learning Quest</title>
+    <title>Task 2: Enhanced Language Learning Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-green: #1b5e20;
-            --accent-green: #8bc34a;
-            --light-bg: #f4f9f4;
-            --text-dark: #212121;
-            --trap-red: #c62828;
-            --success-green: #2e7d32;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e8f5e9;
-            color: var(--text-dark);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #f1f8f5 0%, #e8f5e9 100%);
         }
-
-        .game-container {
-            background-color: white;
-            max-width: 650px;
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            overflow: hidden;
-            border-top: 8px solid var(--primary-green);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(27, 94, 32, 0.08);
         }
-
-        .header {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 20px;
-            text-align: center;
+        /* Custom smooth transition classes */
+        .fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
-        .header h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
+        .scale-up {
+            animation: scaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-
-        .header p {
-            margin: 5px 0 0 0;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            font-style: italic;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .content-panel {
-            padding: 30px;
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-
-        .scene-title {
-            color: var(--primary-green);
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+        /* Pulse glow for educational focal highlights */
+        .glow-pulse {
+            animation: glow 2s infinite ease-in-out;
         }
-
-        .narrative-box {
-            background-color: var(--light-bg);
-            border-left: 4px solid var(--accent-green);
-            padding: 20px;
-            font-style: italic;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option-btn {
-            background-color: white;
-            border: 2px solid #e0e0e0;
-            padding: 14px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .option-btn:hover {
-            border-color: var(--primary-green);
-            background-color: var(--light-bg);
-            transform: translateY(-2px);
-        }
-
-        .feedback-box {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-            line-height: 1.5;
-        }
-
-        .feedback-box.trap {
-            display: block;
-            background-color: #ffebee;
-            border: 1px solid var(--trap-red);
-            color: #b71c1c;
-        }
-
-        .feedback-box.success {
-            display: block;
-            background-color: #e8f5e9;
-            border: 1px solid var(--success-green);
-            color: #1b5e20;
-        }
-
-        .action-btn {
-            margin-top: 15px;
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            float: right;
-        }
-
-        .action-btn:hover {
-            background-color: #0d3c12;
-        }
-
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(139, 195, 74, 0); }
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4 antialiased">
 
-<div class="game-container">
-    <div class="header">
-        <h1>THE LOST AMULET OF RHETORIC</h1>
-        <p>Grade 7 Figures of Speech Interactive Mission</p>
+<div class="game-container w-full max-w-2xl glass-panel rounded-2xl shadow-2xl overflow-hidden border-t-8 border-green-800">
+    
+    <div class="w-full bg-gray-100 h-2 relative">
+        <div id="progress-bar" class="bg-green-700 h-full w-0 transition-all duration-500 ease-out"></div>
+    </div>
+
+    <div class="bg-gradient-to-r from-green-900 to-green-800 text-white p-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold tracking-tight flex items-center gap-2">
+                <i data-lucide="compass" class="w-6 h-6 text-green-300"></i>
+                THE LOST AMULET OF RHETORIC
+            </h1>
+            <p class="text-xs text-green-200 mt-1 italic font-medium opacity-90">Grade 7 Figures of Speech Mastery Quest</p>
+        </div>
+        <div class="flex items-center gap-3 bg-green-950/40 px-4 py-2 rounded-full border border-green-700/30">
+            <span class="text-xs font-bold uppercase tracking-wider text-green-300">Score</span>
+            <span id="score-counter" class="font-bold text-lg text-white transition-all duration-300">0</span>
+        </div>
     </div>
     
-    <div class="content-panel">
-        <div id="scene-title" class="scene-title">Loading Mission...</div>
-        <div id="narrative" class="narrative-box"></div>
+    <div class="p-6 md:p-8">
         
-        <div id="options" class="options-container"></div>
+        <div id="learning-anchor" class="mb-6 bg-amber-50/70 border border-amber-200 rounded-xl p-4 flex items-start gap-3 glow-pulse">
+            <div class="bg-amber-100 p-2 rounded-lg text-amber-800 shrink-0">
+                <i data-lucide="book-open-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-amber-900 uppercase tracking-wide">Active Strategy Anchor</h3>
+                <p id="learning-strategy-text" class="text-sm text-amber-850 mt-0.5 font-medium leading-relaxed">Loading guide...</p>
+            </div>
+        </div>
+
+        <div id="game-card" class="fade-in">
+            <div class="flex items-center gap-2 mb-3">
+                <span id="scene-badge" class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">Scene 1</span>
+                <h2 id="scene-title" class="text-lg font-bold text-gray-800">The Arena Entrance</h2>
+            </div>
+            
+            <p id="narrative" class="text-gray-600 font-medium leading-relaxed bg-gray-50 border border-gray-100 rounded-xl p-5 mb-6 shadow-sm italic"></p>
+            
+            <button id="hint-toggle" class="group mb-4 flex items-center gap-1.5 text-xs font-bold text-green-700 hover:text-green-800 transition-colors focus:outline-none">
+                <i data-lucide="help-circle" class="w-4 h-4 transition-transform group-hover:rotate-12"></i>
+                <span>REVEAL CONTEXTUAL CLUE HINT</span>
+            </button>
+            <div id="hint-box" class="hidden bg-gray-50 border border-dashed border-gray-200 rounded-lg p-3 text-xs text-gray-500 mb-4 transition-all"></div>
+
+            <div id="options" class="flex flex-col gap-3"></div>
+        </div>
         
-        <div id="feedback" class="feedback-box"></div>
+        <div id="feedback" class="hidden mt-6 rounded-xl p-5 border scale-up flex items-start gap-4 shadow-md">
+            <div id="feedback-icon-wrap" class="p-3 rounded-xl shrink-0">
+                <i id="feedback-icon" class="w-6 h-6"></i>
+            </div>
+            <div class="flex-1">
+                <h4 id="feedback-heading" class="font-bold text-base">Feedback</h4>
+                <p id="feedback-text" class="text-sm mt-1 leading-relaxed font-medium"></p>
+                
+                <div id="deep-learning-block" class="mt-3 pt-3 border-t hidden">
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Why this works:
+                    </h5>
+                    <p id="deep-learning-text" class="text-xs text-gray-500 mt-1 font-medium leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
         
-        <div class="clearfix">
-            <button id="next-btn" class="action-btn" style="display: none;">Advance Path →</button>
-            <button id="retry-btn" class="action-btn" style="display: none; background-color: var(--trap-red);">Try Again ↻</button>
+        <div class="mt-6 flex justify-end">
+            <button id="next-btn" class="hidden items-center gap-2 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-green-700/20 transition-all duration-150 transform hover:-translate-y-0.5">
+                <span>Advance Path</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <button id="retry-btn" class="hidden items-center gap-2 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-red-600/20 transition-all duration-150 transform hover:-translate-y-0.5">
+                <span>Try Again</span>
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
         </div>
     </div>
 </div>
 
 <script>
+    // Robust dataset tracking core grammar metrics and educational concept models
     const storyData = {
         1: {
-            title: "Scene 1: The Jungle Entrance",
-            narrative: "You stand before the ancient stone ruins of Cabadbaran. Over the crumbling archway, a glowing inscription reads: 'The classroom was a zoo during recess.' A stone guardian blocks the path and booms, 'Identify the spell fueling this riddle, or remain locked outside forever!'",
+            title: "The Jungle Entrance Gates",
+            badge: "Trial Node 1",
+            strategy: "Look for explicit connections. A metaphor matches concepts directly without declaring comparison signals.",
+            hint: "Focus closely on 'was a zoo'. Is it saying the room was SIMILAR to a zoo, or is it stating it WAS one directly?",
+            narrative: "You stand before the ancient stone ruins of Cabadbaran. Over the crumbling archway, a glowing inscription reads: 'The classroom was a zoo during recess.' A stone guardian blocks the path and bellows, 'Identify the linguistic device fueling this riddle, or remain locked outside forever!'",
             choices: [
                 {
-                    text: "Choice A: Use a Simile Key.",
+                    text: "Deploy a Simile Key.",
                     status: "trap",
-                    feedback: "🛑 <strong>Trap Triggered!</strong> The ground shakes violently. The guardian frowns: 'A simile demands comparison words such as \"like\" or \"as\"! Step back and recalibrate your mind.'"
+                    icon: "shield-alert",
+                    heading: "Linguistic Barrier Triggered!",
+                    feedback: "The ground shakes violently! The guardian frowns: 'A simile demands structural connector words such as \"like\" or \"as\" to draw an explicit parallel! Look closer at the architecture.'",
+                    rationale: "In this sentence, the classroom is directly substituted as a 'zoo'. Since it states it *was* a zoo rather than acting *like* a zoo, it bypasses simile architecture entirely."
                 },
                 {
-                    text: "Choice B: Whisper the keyword: 'Metaphor'.",
+                    text: "Whisper the phrase: 'Metaphor'.",
                     status: "success",
-                    feedback: "✨ <strong>Success Path!</strong> The massive stone arch slides open with a rumble. 'Correct! You recognized a direct equation of a chaotic classroom to a zoo without relying on connectors. Advance into the courtyard!'",
-                    nextScene: 2
+                    icon: "sparkles",
+                    heading: "Safe Passage Granted!",
+                    feedback: "The massive stone arch slides open with a deep rumble. 'Excellent tracking! You recognized a direct equation of a chaotic environment to a zoo without relying on connectors. Proceed into the courtyard!'",
+                    rationale: "Metaphors assert that one thing *is* another thing to apply its traits natively. Saying 'the room was a zoo' instantly paints a picture of noise and wild activity.",
+                    nextScene: 2,
+                    points: 20
                 }
             ]
         },
         2: {
-            title: "Scene 2: The Whispering Courtyard",
+            title: "The Whispering Courtyard",
+            badge: "Trial Node 2",
+            strategy: "Observe the subject actions. If objects perform traits native to humans, you are dealing with personification.",
+            hint: "Can natural leaves purposefully 'whisper secrets' to one another? Who usually whispers?",
             narrative: "You step into a courtyard overgrown with shifting flora. Suddenly, a cold breeze sweeps through: 'The autumn leaves scraped across the pavement, whispering secrets to the wind.' The air coalesces into a swirling face. 'What magic powers my voice?' it demands.",
             choices: [
                 {
-                    text: "Choice A: Shout 'Personification!' into the gale.",
+                    text: "Invoke 'Personification!' aloud.",
                     status: "success",
-                    feedback: "✨ <strong>Success Path!</strong> The vaporous face smiles and disperses into safe, glowing path markers. 'Precisely! You recognized human traits—whispering secrets—instilled into inanimate autumn leaves. The inner vault opens!'",
-                    nextScene: 3
+                    icon: "sparkles",
+                    heading: "Elemental Path Unlocked!",
+                    feedback: "The vaporous face smiles and disperses into sparkling green path markers. 'Precisely! You recognized human traits—whispering secrets—instilled seamlessly into inanimate autumn leaves. The inner vault opens!'",
+                    rationale: "By pairing the action of whispering secrets (a uniquely human capacity) with physical autumn leaves, the sentence applies personification to bring imagery alive for readers.",
+                    nextScene: 3,
+                    points: 20
                 },
                 {
-                    text: "Choice B: Cast a Metaphor Shield.",
+                    text: "Cast a Metaphor Shield.",
                     status: "trap",
-                    feedback: "🛑 <strong>Trap Triggered!</strong> The wind knocks your avatar back onto the stone tiles. 'Incorrect! I am not merely equating two entities; I am imbuing nature with human actions! Try again.'"
+                    icon: "shield-alert",
+                    heading: "Linguistic Blastback!",
+                    feedback: "The wind pressure increases, knocking your avatar back onto the stone tiles. 'Incorrect! I am not merely equating two entities; I am imbuing the natural landscape with human actions and intelligence! Look deeper.'",
+                    rationale: "A metaphor compares identity. Here, the leaves aren't being called humans; they are simply performing human actions, which makes this personification instead."
                 }
             ]
         },
         3: {
-            title: "Scene 3: The Hunger Crypt",
-            narrative: "Deep within the catacombs, the final golden chest sits waiting. Guarding it is a giant ruby-eyed golem. He stomps his fist and bellows: 'I am so hungry I could eat an entire elephant right now! Name the figure of speech that anchors my declaration, or turn back!'",
+            title: "The Hunger Crypt",
+            badge: "Final Trial",
+            strategy: "Evaluate statements for literal truth. Massive exaggerations used to make a strong point are classified as hyperbole.",
+            hint: "Think about physical limits. Is it biologically possible for a person to consume a whole elephant in one sitting?",
+            narrative: "Deep within the catacombs, the golden chest rests safely. Guarding it is a giant ruby-eyed golem. He stomps his fist and bellows: 'I am so hungry I could eat an entire elephant right now! Name the figure of speech that anchors my declaration, or turn back!'",
             choices: [
                 {
-                    text: "Choice A: Identify it as a Simile.",
+                    text: "Identify it as a Simile.",
                     status: "trap",
-                    feedback: "🛑 <strong>Trap Triggered!</strong> The golem growls and brandishes his fist. 'Where is the structural connector word \"like\" or \"as\" in my statement? Your path ends unless you fix this mistake!'"
+                    icon: "shield-alert",
+                    heading: "Impact Registered!",
+                    feedback: "The golem growls and brandishes his fist. 'Where is the structural connector word \"like\" or \"as\" in my statement? Your path ends unless you correct this structural failure!'",
+                    rationale: "Similes require comparison words to build a bridge. Because the golem states 'I could eat...' without using comparative links, it fails to meet simile rules."
                 },
                 {
-                    text: "Choice B: Declare it a Hyperbole.",
+                    text: "Declare it a Hyperbole.",
                     status: "success",
-                    feedback: "🏆 <strong>Quest Complete!</strong> The golem laughs heartily, converting his stony form into a harmless pile of gems. 'Splendid! You unmasked my extreme exaggeration for what it is. The Ancient Amulet of Rhetoric belongs to you!'",
-                    nextScene: 'end'
+                    icon: "trophy",
+                    heading: "Quest Completed successfully!",
+                    feedback: "The golem laughs heartily, converting his stony form into a harmless pile of gems. 'Splendid work! You unmasked my extreme exaggeration for what it is. The Ancient Amulet of Rhetoric belongs to you!'",
+                    rationale: "Hyperbole leverages wild exaggeration to magnify an emotion or situation. The golem uses the absurd concept of eating an elephant to emphasize severe hunger.",
+                    nextScene: 'end',
+                    points: 20
                 }
             ]
         }
     };
 
     let currentScene = 1;
+    let currentScore = 0;
 
     function renderScene(sceneId) {
+        // Run Lucide conversion utility
+        setTimeout(() => lucide.createIcons(), 5);
+
+        // Calculate progress tracking percentage
+        const totalScenes = Object.keys(storyData).length;
+        const pct = sceneId === 'end' ? 100 : ((sceneId - 1) / totalScenes) * 100;
+        document.getElementById('progress-bar').style.width = `${pct}%`;
+
         if(sceneId === 'end') {
-            document.getElementById('scene-title').innerText = "🏆 Victory Achieved!";
-            document.getElementById('narrative').innerText = "Congratulations! You safely bypassed all three linguistic trial chambers, proved your mastery over figures of speech, and completed the Task 2 Interactive Module!";
-            document.getElementById('options').innerHTML = "";
-            document.getElementById('feedback').style.display = "none";
+            document.getElementById('learning-anchor').remove();
+            document.getElementById('game-card').innerHTML = `
+                <div class="text-center py-8 scale-up">
+                    <div class="inline-flex p-4 bg-green-100 rounded-full text-green-700 mb-4">
+                        <i data-lucide="award" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800">Mastery Complete!</h2>
+                    <p class="text-gray-600 mt-2 max-w-md mx-auto">Outstanding work! You successfully bypassed all linguistic trials, mastered Grade 7 Figures of Speech, and completed the journey with a score of ${currentScore} points.</p>
+                </div>
+            `;
             document.getElementById('next-btn').style.display = "none";
             document.getElementById('retry-btn').style.display = "none";
+            document.getElementById('feedback').style.display = "none";
+            setTimeout(() => lucide.createIcons(), 5);
             return;
         }
 
         const scene = storyData[sceneId];
+        
+        // Reset Card Component Values
+        document.getElementById('scene-badge').innerText = scene.badge;
         document.getElementById('scene-title').innerText = scene.title;
+        document.getElementById('learning-strategy-text').innerText = scene.strategy;
         document.getElementById('narrative').innerText = scene.narrative;
         
-        // Hide control buttons initially
+        // Set hint content
+        const hintBox = document.getElementById('hint-box');
+        hintBox.innerText = scene.hint;
+        hintBox.classList.add('hidden');
+
+        // Hide Actions UI elements
         document.getElementById('next-btn').style.display = "none";
         document.getElementById('retry-btn').style.display = "none";
-        document.getElementById('feedback').className = "feedback-box";
         document.getElementById('feedback').style.display = "none";
 
         const optionsContainer = document.getElementById('options');
         optionsContainer.innerHTML = "";
 
+        // Build Buttons
         scene.choices.forEach(choice => {
             const button = document.createElement('button');
-            button.className = 'option-btn';
-            button.innerText = choice.text;
+            button.className = 'option-btn flex justify-between items-center bg-white border-2 border-gray-200 hover:border-green-700 hover:bg-green-50/30 p-4 rounded-xl cursor-pointer font-semibold text-gray-700 text-sm transition-all duration-200 transform active:scale-[0.99]';
+            button.innerHTML = `
+                <span>${choice.text}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
+            `;
             button.onclick = () => handleChoice(choice);
             optionsContainer.appendChild(button);
         });
+
+        setTimeout(() => lucide.createIcons(), 5);
     }
 
     function handleChoice(choice) {
         const feedbackDiv = document.getElementById('feedback');
-        feedbackDiv.innerHTML = choice.feedback;
+        const iconWrap = document.getElementById('feedback-icon-wrap');
+        const iconEl = document.getElementById('feedback-icon');
         
-        // Disable option choices once picked
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach(btn => btn.disabled = true);
+        // Disable choices
+        document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+
+        // Apply updated text parameters
+        document.getElementById('feedback-heading').innerText = choice.heading;
+        document.getElementById('feedback-text').innerText = choice.feedback;
+        document.getElementById('deep-learning-text').innerText = choice.rationale;
+        document.getElementById('deep-learning-block').classList.remove('hidden');
+
+        // Toggle state elements dynamically
+        feedbackDiv.classList.remove('hidden', 'bg-red-50', 'border-red-200', 'text-red-900', 'bg-green-50', 'border-green-200', 'text-green-900');
+        iconWrap.classList.remove('bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
 
         if(choice.status === 'success') {
-            feedbackDiv.className = "feedback-box success";
+            // Apply Points
+            currentScore += choice.points;
+            document.getElementById('score-counter').innerText = currentScore;
+            
+            feedbackDiv.classList.add('bg-green-50', 'border-green-200', 'text-green-900');
+            iconWrap.classList.add('bg-green-100', 'text-green-800');
+            iconEl.setAttribute('data-lucide', choice.icon);
+            
             const nextBtn = document.getElementById('next-btn');
-            nextBtn.style.display = "block";
+            nextBtn.style.display = "inline-flex";
             nextBtn.onclick = () => {
                 currentScene = choice.nextScene;
                 renderScene(currentScene);
             };
         } else {
-            feedbackDiv.className = "feedback-box trap";
+            feedbackDiv.classList.add('bg-red-50', 'border-red-200', 'text-red-900');
+            iconWrap.classList.add('bg-red-100', 'text-red-800');
+            iconEl.setAttribute('data-lucide', choice.icon);
+            
             const retryBtn = document.getElementById('retry-btn');
-            retryBtn.style.display = "block";
-            retryBtn.onclick = () => {
-                renderScene(currentScene); // Reset current scene setup
-            };
+            retryBtn.style.display = "inline-flex";
+            retryBtn.onclick = () => renderScene(currentScene);
         }
+
+        setTimeout(() => lucide.createIcons(), 5);
     }
 
-    // Start Game
+    // Toggle logic for hints
+    document.getElementById('hint-toggle').onclick = () => {
+        const hb = document.getElementById('hint-box');
+        hb.classList.toggle('hidden');
+    };
+
+    // Run Initial Setup Entry Point
     renderScene(currentScene);
 </script>
 
