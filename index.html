@@ -3,309 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 7 Rhetoric Flashcards</title>
-    <!-- Tailwind CSS Engine -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Vector Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Premium Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Interactive Grammar Tutorial: Subject-Verb Agreement</title>
     <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #0d9488;
+            --subject-color: #2563eb;
+            --verb-color: #16a34a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top center, #f8fafc 0%, #f1f5f9 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        /* 3D Card Flip Mechanics */
-        .perspective-container {
-            perspective: 1000px;
-        }
-        .card-inner {
+
+        .tutorial-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 40px;
             position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
+            overflow: hidden;
         }
-        .card-flipped {
-            transform: rotateY(180deg);
+
+        /* Slide structure */
+        .slide {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
         }
-        .card-front, .card-back {
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        h1 { font-size: 2.2rem; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; }
+        h2 { font-size: 1.8rem; }
+
+        .highlight-subject { color: var(--subject-color); font-weight: bold; }
+        .highlight-verb { color: var(--verb-color); font-weight: bold; }
+
+        /* Audio Button styling */
+        .audio-btn {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            vertical-align: middle;
+        }
+
+        .audio-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .audio-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--primary);
+        }
+
+        /* Example sentence boxes */
+        .sentence-box {
+            background: #f1f5f9;
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.25rem;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        /* Interactive Quiz Elements */
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quiz-btn {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.correct {
+            display: block;
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback.wrong {
+            display: block;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Navigation controls */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+        }
+
+        .progress-fill {
             height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
-        }
-        .card-back {
-            transform: rotateY(180deg);
-        }
-        /* Highlight styles for the active hint mode */
-        .syntax-highlight {
-            background-color: #fef08a;
-            border-bottom: 2px dashed #ca8a04;
-            padding: 0 4px;
-            border-radius: 4px;
-            color: #854d0e;
+            background: var(--secondary);
+            width: 20%;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between p-4 md:p-8 antialiased selection:bg-indigo-100">
+<body>
 
-    <!-- Top Navigation Header Dashboard -->
-    <div class="w-full max-w-xl flex items-center justify-between bg-white border border-slate-200/80 rounded-2xl px-5 py-3.5 shadow-sm">
-        <div class="flex items-center gap-2.5">
-            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <i data-lucide="layers" class="w-5 h-5"></i>
-            </div>
-            <div>
-                <h1 class="text-sm font-extrabold text-slate-800 tracking-tight">Rhetoric Deck</h1>
-                <p class="text-[11px] font-semibold text-slate-400">Grade 7 Figures of Speech</p>
-            </div>
-        </div>
-        <!-- Live Deck Metric Indicator -->
-        <div class="bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-xs font-bold text-slate-600">
-            Card <span id="current-index">1</span> of <span id="total-cards">3</span>
-        </div>
-    </div>
-
-    <!-- Main Dynamic Interface Layout Window -->
-    <div class="w-full max-w-xl my-auto py-8 space-y-6">
-        
-        <!-- Active Strategy Instruction Tip Banner -->
-        <div class="bg-indigo-50/60 border border-indigo-100/80 rounded-2xl p-4 flex items-start gap-3.5">
-            <div class="p-2 bg-white rounded-xl text-indigo-600 shadow-sm border border-indigo-100 shrink-0">
-                <i data-lucide="lightbulb" class="w-4 h-4 fill-indigo-50"></i>
-            </div>
-            <div class="space-y-0.5">
-                <h3 class="text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Flashcard Tip</h3>
-                <p id="strategy-guide" class="text-xs text-slate-600 font-medium leading-relaxed">Loading guide parameters...</p>
-            </div>
+    <div class="tutorial-container">
+        <!-- Progress Indicator -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
         </div>
 
-        <!-- 3D Flashcard Presentation Viewport -->
-        <div class="perspective-container w-full h-[280px] cursor-pointer group">
-            <div id="flashcard" class="card-inner shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300">
-                
-                <!-- FRONT SIDE: Sentence Challenge Face -->
-                <div class="card-front bg-white border border-slate-200/80 p-6 flex flex-col justify-between items-center relative">
-                    <div class="w-full flex justify-between items-center">
-                        <span id="badge-front" class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider border border-slate-200/50">Challenge Case</span>
-                        <!-- Clue Tool button inside front of card -->
-                        <button id="btn-clue" class="p-1.5 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-lg text-slate-400 hover:text-amber-600 transition-colors z-10" title="Reveal clue context highlight">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                    
-                    <p id="phrase-front" class="text-lg font-bold text-slate-800 tracking-wide leading-relaxed px-4 select-text"></p>
-                    
-                    <div class="text-xs font-bold text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-pulse text-indigo-500"></i>
-                        <span>Click card space to flip & verify</span>
-                    </div>
-                </div>
-
-                <!-- BACK SIDE: Answer and Rule Core Matrix Face -->
-                <div class="card-back bg-gradient-to-br from-indigo-900 to-slate-950 p-6 flex flex-col justify-between border border-indigo-950 text-left">
-                    <div class="flex justify-between items-center">
-                        <span class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider border border-indigo-500/30">Verified Analysis</span>
-                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/50"></div>
-                    </div>
-
-                    <!-- Core Answer Values -->
-                    <div class="space-y-2">
-                        <div class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest">Identified Device:</div>
-                        <h2 id="device-back" class="text-2xl font-black text-white tracking-tight">Metaphor</h2>
-                        <p id="rule-back" class="text-xs text-slate-300 font-medium leading-relaxed pt-1 border-t border-indigo-800/50"></p>
-                    </div>
-
-                    <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
-                        <i data-lucide="info" class="w-3.5 h-3.5"></i>
-                        <span>Click card space to flip back</span>
-                    </div>
-                </div>
-
-            </div>
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active" id="slide-1">
+            <h1>Mastering Subject-Verb Agreement</h1>
+            <h3>Lesson Theme: The Rules of Either/Or & Neither/Nor</h3>
+            <p>Welcome to this interactive tutorial! Matching verbs with trickier compound subjects can be puzzling. This short lesson breaks down the golden rule effortlessly with visual guides and voice examples.</p>
+            <p><strong>Tech Tip:</strong> Look for the speaker icon (<button class="audio-btn" style="pointer-events: none;"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>) to hear standard audio pronunciations of each rule and sentence!</p>
         </div>
 
-    </div>
-
-    <!-- Bottom Actions Deck: Navigation and Logic Verification -->
-    <div class="w-full max-w-xl flex flex-col items-center gap-4">
-        
-        <!-- Interactive Self-Check Evaluation Controls -->
-        <div id="feedback-deck" class="w-full grid grid-cols-2 gap-3 opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2">
-            <button id="btn-fail" class="flex items-center justify-center gap-2 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-300 text-slate-700 font-bold text-xs py-3 rounded-xl shadow-sm active:scale-[0.98] transition-all uppercase tracking-wider">
-                <i data-lucide="x-circle" class="w-4 h-4 text-rose-500"></i>
-                <span>Still Unsure</span>
-            </button>
-            <button id="btn-pass" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3 rounded-xl shadow-md shadow-indigo-600/10 active:scale-[0.98] transition-all uppercase tracking-wider">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-200 fill-indigo-500/20"></i>
-                <span>I Mastered This</span>
-            </button>
+        <!-- SLIDE 2: THE PROXIMITY RULE -->
+        <div class="slide" id="slide-2">
+            <h2>The Rule of Proximity 
+                <button class="audio-btn" onclick="speakText('The Rule of Proximity. When subjects are joined by either or, or neither nor, the verb must agree with the subject closest to it.')">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
+                </button>
+            </h2>
+            <p>When distinct sentence subjects are chained using <strong>either...or</strong> or <strong>neither...nor</strong>, stop trying to count all the elements together.</p>
+            <p>Instead, focus entirely on the <strong>subject closest to the verb position</strong>.</p>
+            <ul>
+                <li>If that nearest subject is <span class="highlight-subject">singular</span> &rarr; use a <span class="highlight-verb">singular verb</span>.</li>
+                <li>If that nearest subject is <span class="highlight-subject">plural</span> &rarr; use a <span class="highlight-verb">plural verb</span>.</li>
+            </ul>
         </div>
 
-        <!-- System Pagination Control Strip -->
-        <div class="w-full flex justify-between items-center border-t border-slate-200/60 pt-4">
-            <button id="nav-prev" class="flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-xl shadow-sm disabled:opacity-40 disabled:pointer-events-none transition-all">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                <span>Previous</span>
-            </button>
+        <!-- SLIDE 3: SCENARIO A -->
+        <div class="slide" id="slide-3">
+            <h2>Case 1: Closest Subject is Singular</h2>
+            <p>Let's look at what happens when the second subject is singular:</p>
             
-            <div id="deck-stats" class="text-xs text-slate-400 font-bold tracking-wide">
-                Mastered: <span id="mastered-count" class="text-slate-700 font-extrabold">0</span>
+            <div class="sentence-box">
+                "Neither the teachers nor the <span class="highlight-subject">principal</span> <span class="highlight-verb">is</span> attending the meeting today."
+                <button class="audio-btn" onclick="speakText('Neither the teachers nor the principal is attending the meeting today.')">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
+                </button>
             </div>
 
-            <button id="nav-next" class="flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-xl shadow-sm disabled:opacity-40 disabled:pointer-events-none transition-all">
-                <span>Next Deck</span>
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-            </button>
+            <p><strong>Why?</strong> Even though "teachers" is plural, the word <span class="highlight-subject">principal</span> sits right next to the verb action. Since principal is singular, we drop in the singular verb <span class="highlight-verb">is</span>.</p>
         </div>
 
+        <!-- SLIDE 4: SCENARIO B -->
+        <div class="slide" id="slide-4">
+            <h2>Case 2: Closest Subject is Plural</h2>
+            <p>Now let's swap the word order around and notice how the verb structurally responds:</p>
+
+            <div class="sentence-box">
+                "Either the principal or the <span class="highlight-subject">teachers</span> <span class="highlight-verb">are</span> attending the meeting today."
+                <button class="audio-btn" onclick="speakText('Either the principal or the teachers are attending the meeting today.')">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
+                </button>
+            </div>
+
+            <p><strong>Why?</strong> Now, the plural noun <span class="highlight-subject">teachers</span> sits closest to the action window. Therefore, the verb naturally transforms into the matching plural variant, <span class="highlight-verb">are</span>.</p>
+        </div>
+
+        <!-- SLIDE 5: INTERACTIVE QUIZ -->
+        <div class="slide" id="slide-5">
+            <h2>Interactive Knowledge Check 
+                <button class="audio-btn" onclick="speakText('Neither the manager nor the employees blank happy about the new schedule.')">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
+                </button>
+            </h2>
+            <p>Read the sentence below out loud and select the grammatically correct option:</p>
+            
+            <div class="sentence-box" id="quiz-sentence">
+                "Neither the manager nor the <strong>employees</strong> ________ happy about the new schedule."
+            </div>
+
+            <div class="quiz-options">
+                <button class="quiz-btn" onclick="checkAnswer('is')">is</button>
+                <button class="quiz-btn" onclick="checkAnswer('are')">are</button>
+            </div>
+
+            <div id="quiz-feedback" class="feedback"></div>
+        </div>
+
+        <!-- SLIDE 6: SUMMARY -->
+        <div class="slide" id="slide-6">
+            <h2>Tutorial Wrap-up! 🎉</h2>
+            <p>Excellent work navigating this tutorial! Keep these two quick takeaways locked down:</p>
+            <ul>
+                <li>Ignore the first subject item entirely when determining verb agreement for *either/or* and *neither/nor*.</li>
+                <li>Let the structural companion <strong>nearest to the blank</strong> do all the talking.</li>
+            </ul>
+            <p>You have satisfied the digital grammar instructional criteria. Feel free to refresh this module to practice your pronunciation exercises anytime!</p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next Slide</button>
+        </div>
     </div>
 
-<script>
-    // Pure Modular Structural Dataset
-    const flashcardDeckMatrix = [
-        {
-            tip: "Look for direct replacement attributes. If an author states identity value 'A' IS identity value 'B' without comparing tools like 'like' or 'as', it maps a metaphor structure.",
-            textPlain: "“The classroom was a zoo during recess.”",
-            textClue: "“The classroom <span class='syntax-highlight'>was a zoo</span> during recess.”",
-            device: "Metaphor",
-            rule: "A metaphor merges identity natively. Calling a room filled with active students a 'zoo' immediately attaches noise and chaotic behaviors to the environment without adding weak connector adjectives."
-        },
-        {
-            tip: "Examine the verbs closely. When physical object units or landscapes execute functions exclusive to human thoughts, language, or logic, personification is running.",
-            textPlain: "“The autumn leaves scraped across the pavement, whispering secrets to the wind.”",
-            textClue: "“The autumn leaves scraped across the pavement, <span class='syntax-highlight'>whispering secrets</span> to the wind.”",
-            device: "Personification",
-            rule: "Personification maps human identity onto abstract items. Leaves cannot form conversational thoughts or hide secrets; giving them this human action creates a poetic sensory dynamic."
-        },
-        {
-            tip: "Measure settings against biological or physical parameters. Massive extensions of reality designed to project emotional states are categorized under hyperbole.",
-            textPlain: "“I am so hungry I could eat an entire elephant right now!”",
-            textClue: "“I am so hungry I <span class='syntax-highlight'>could eat an entire elephant</span> right now!”",
-            device: "Hyperbole",
-            rule: "Hyperbole uses magnification instead of literal measurements. Consuming an entire elephant is physically impossible, but expanding the hunger scale emphasizes intense sensory feeling."
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        function changeSlide(direction) {
+            // Hide current slide
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            
+            // Update index
+            currentSlide += direction;
+            
+            // Show new slide
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+
+            // Update buttons
+            document.getElementById('prevBtn').disabled = (currentSlide === 1);
+            if (currentSlide === totalSlides) {
+                document.getElementById('nextBtn').innerText = "Finish";
+                document.getElementById('nextBtn').disabled = true;
+            } else {
+                document.getElementById('nextBtn').innerText = "Next Slide";
+                document.getElementById('nextBtn').disabled = false;
+            }
+
+            // Update progress bar
+            const progressPercent = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress').style.width = `${progressPercent}%`;
         }
-    ];
 
-    let currentCardPointer = 0;
-    let clueModeActive = false;
-    let cardIsFlipped = false;
-    const cardsMasteredSet = new Set();
-
-    function initializeApplicationDeck() {
-        // Build Lucide graphics
-        setTimeout(() => lucide.createIcons(), 5);
-
-        // Sync numeric indicators
-        document.getElementById('total-cards').innerText = flashcardDeckMatrix.length;
-        renderActiveCardParameters();
-
-        // Connect Flip Interactive Operations
-        document.getElementById('flashcard').onclick = function(e) {
-            // Prevent flip action if clicking the clue icon button explicitly
-            if (e.target.closest('#btn-clue')) return;
-            
-            cardIsFlipped = !cardIsFlipped;
-            this.classList.toggle('card-flipped', cardIsFlipped);
-            
-            // Render choice confirmation deck block once card has been rotated
-            const feedbackDeck = document.getElementById('feedback-deck');
-            if(cardIsFlipped) {
-                feedbackDeck.className = "w-full grid grid-cols-2 gap-3 opacity-100 pointer-events-auto transition-all duration-300 transform translate-y-0";
+        // Voice Pronunciation Feature using Web Speech API
+        function speakText(textToSay) {
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech instantly
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(textToSay);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // Slightly slower for clear instruction
+                window.speechSynthesis.speak(utterance);
             } else {
-                feedbackDeck.className = "w-full grid grid-cols-2 gap-3 opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2";
+                alert("Your browser does not support audio speech synthesis.");
             }
-        };
+        }
 
-        // Wire Clue Highlighter Button
-        document.getElementById('btn-clue').onclick = function() {
-            clueModeActive = !clueModeActive;
-            this.classList.toggle('bg-amber-100', clueModeActive);
-            this.classList.toggle('border-amber-400', clueModeActive);
-            this.classList.toggle('text-amber-700', clueModeActive);
-            
-            const activeCard = flashcardDeckMatrix[currentCardPointer];
-            document.getElementById('phrase-front').innerHTML = clueModeActive ? activeCard.textClue : activeCard.textPlain;
-        };
-
-        // Wire Self-Check Calibration Buttons
-        document.getElementById('btn-pass').onclick = () => {
-            cardsMasteredSet.add(currentCardPointer);
-            updateMasteryCounterMetric();
-            triggerAutoAdvanceSequence();
-        };
-
-        document.getElementById('btn-fail').onclick = () => {
-            cardsMasteredSet.delete(currentCardPointer);
-            updateMasteryCounterMetric();
-            triggerAutoAdvanceSequence();
-        };
-
-        // Connect Nav Controls
-        document.getElementById('nav-prev').onclick = () => changeCardStepOffset(-1);
-        document.getElementById('nav-next').onclick = () => changeCardStepOffset(1);
-    }
-
-    function renderActiveCardParameters() {
-        const dataItem = flashcardDeckMatrix[currentCardPointer];
-        
-        // Reset card flip execution states cleanly before content swapping
-        cardIsFlipped = false;
-        document.getElementById('flashcard').classList.remove('card-flipped');
-        document.getElementById('feedback-deck').className = "w-full grid grid-cols-2 gap-3 opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2";
-
-        // Inject Content Matrix variables
-        document.getElementById('current-index').innerText = currentCardPointer + 1;
-        document.getElementById('strategy-guide').innerText = dataItem.tip;
-        document.getElementById('badge-front').innerText = `Challenge Node 0${currentCardPointer + 1}`;
-        
-        // Reset and check clue modes
-        clueModeActive = false;
-        const clueBtn = document.getElementById('btn-clue');
-        clueBtn.className = "p-1.5 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-lg text-slate-400 hover:text-amber-600 transition-colors z-10";
-        document.getElementById('phrase-front').innerHTML = dataItem.textPlain;
-
-        // Render back matrix elements
-        document.getElementById('device-back').innerText = dataItem.device;
-        document.getElementById('rule-back').innerText = dataItem.rule;
-
-        // Verify Navigation boundary safety
-        document.getElementById('nav-prev').disabled = (currentCardPointer === 0);
-        document.getElementById('nav-next').disabled = (currentCardPointer === flashcardDeckMatrix.length - 1);
-
-        setTimeout(() => lucide.createIcons(), 5);
-    }
-
-    function changeCardStepOffset(offsetValue) {
-        currentCardPointer += offsetValue;
-        renderActiveCardParameters();
-    }
-
-    function triggerAutoAdvanceSequence() {
-        // Automatically close/flip card and move to next node if available
-        setTimeout(() => {
-            if (currentCardPointer < flashcardDeckMatrix.length - 1) {
-                changeCardStepOffset(1);
+        // Quiz Verification Logic
+        function checkAnswer(answer) {
+            const feedbackBox = document.getElementById('quiz-feedback');
+            if (answer === 'are') {
+                feedbackBox.className = "feedback correct";
+                feedbackBox.innerHTML = "<strong>Correct!</strong> 'Employees' is plural and sits closest to the verb window, so 'are' is the perfect match! 🔊";
+                speakText("Correct! Employees is plural, so are is the perfect match!");
+                document.getElementById('nextBtn').disabled = false;
             } else {
-                // Return to first item smoothly if finalizing deck validation
-                cardIsFlipped = false;
-                document.getElementById('flashcard').classList.remove('card-flipped');
-                document.getElementById('feedback-deck').className = "w-full grid grid-cols-2 gap-3 opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2";
+                feedbackBox.className = "feedback wrong";
+                feedbackBox.innerHTML = "<strong>Not quite!</strong> Look at the closest subject item: 'employees' is plural, so it requires a plural verb. Try again! 🔊";
+                speakText("Not quite! Look at the closest subject item: employees is plural.");
             }
-        }, 350);
-    }
-
-    function updateMasteryCounterMetric() {
-        document.getElementById('mastered-count').innerText = cardsMasteredSet.size;
-    }
-
-    // Initialize application script entry points
-    initializeApplicationDeck();
-</script>
-
+        }
+    </script>
 </body>
 </html>
