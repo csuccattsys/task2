@@ -3,363 +3,388 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 2: Advanced Interactive Learning Matrix</title>
+    <title>The Lost Amulet of Rhetoric - Grade 7 Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #f4fbf7 0%, #e8f5e9 100%);
+            background-color: #0c1910;
         }
-        .neo-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(27, 94, 32, 0.12);
+        .fantasy-title {
+            font-family: 'Cinzel', serif;
         }
-        .highlight-connector {
-            background-color: #fef08a;
-            border-bottom: 2px dashed #ca8a04;
-            padding: 0 4px;
-            border-radius: 4px;
-            font-weight: 700;
+        /* Custom Keyframe Game Animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .highlight-target {
-            background-color: #bfdbfe;
-            border-bottom: 2px dashed #2563eb;
-            padding: 0 4px;
-            border-radius: 4px;
-            font-weight: 700;
+        .animate-slide-up {
+            animation: slideUp 0.4s ease-out forwards;
         }
-        /* Fluid Interface Animations */
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.97) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
-        .animate-scale-in {
-            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+        .animate-float {
+            animation: float 3s infinite ease-in-out;
         }
-        @keyframes subtlePulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 94, 32, 0.2); }
-            50% { transform: scale(1.01); box-shadow: 0 0 0 8px rgba(27, 94, 32, 0); }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
         }
-        .pulse-active {
-            animation: subtlePulse 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+        /* Style for active highlighted clues inside text */
+        .clue-highlight {
+            border-bottom: 2px dashed #eab308;
+            color: #fde047;
+            font-weight: bold;
+            padding: 0 2px;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-8 antialiased">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-<div class="w-full max-w-3xl neo-card rounded-3xl shadow-2xl overflow-hidden border-b-8 border-green-900 animate-scale-in">
+<div id="game-viewport" class="w-full max-w-4xl bg-stone-900 border-4 border-amber-600 rounded-3xl shadow-2xl overflow-hidden relative flex flex-col md:flex-row h-[600px]">
     
-    <div class="bg-gray-100 h-2 w-full tracking-wide relative">
-        <div id="ui-progress" class="bg-gradient-to-r from-green-600 to-green-800 h-full w-0 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)"></div>
+    <div class="w-full md:w-1/2 bg-gradient-to-b from-emerald-950 to-stone-950 relative border-b-4 md:border-b-0 md:border-r-4 border-amber-600 flex flex-col justify-between p-4">
+        
+        <div class="flex items-center justify-between z-10">
+            <div class="flex items-center gap-2 bg-black/40 border border-white/10 px-3 py-1.5 rounded-xl">
+                <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+                <span class="text-xs font-bold text-amber-200 uppercase tracking-wider">XP: <span id="game-xp">0</span></span>
+            </div>
+            <div class="flex items-center gap-2 bg-black/40 border border-white/10 px-3 py-1.5 rounded-xl">
+                <i data-lucide="heart" class="w-4 h-4 text-red-500 fill-red-500"></i>
+                <span class="text-xs font-bold text-red-200 uppercase tracking-wider">Hearts: <span id="game-hearts">3</span></span>
+            </div>
+        </div>
+
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-12">
+            <div id="avatar-container" class="animate-float flex flex-col items-center gap-4 transition-all duration-300">
+                <div class="p-6 bg-emerald-900/40 border-2 border-emerald-500/30 rounded-full bg-blur shadow-2xl shadow-emerald-500/20">
+                    <i id="scene-icon" data-lucide="castle" class="w-20 h-20 text-emerald-400"></i>
+                </div>
+                <div id="avatar-label" class="bg-black/60 border border-emerald-500/40 px-4 py-1 rounded-full text-xs font-bold text-emerald-300 uppercase tracking-widest">
+                    Cabadbaran Ruins
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-black/60 backdrop-blur-md border border-white/10 p-4 rounded-xl z-10">
+            <div class="text-[10px] uppercase font-bold text-amber-500 tracking-widest mb-1" id="scene-node-tag">Node 01</div>
+            <p id="scene-narrative" class="text-xs md:text-sm text-stone-200 font-medium leading-relaxed italic">
+                Loading game coordinates...
+            </p>
+        </div>
+
     </div>
 
-    <div class="bg-gradient-to-br from-green-950 via-green-900 to-green-800 text-white p-6 md:p-8 border-b border-green-700/20">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <div class="flex items-center gap-2.5">
-                    <div class="p-2 bg-green-800/60 rounded-xl border border-green-600/30">
-                        <i data-lucide="shield" class="w-6 h-6 text-green-400"></i>
+    <div class="w-full md:w-1/2 bg-stone-950 p-6 flex flex-col justify-between h-full relative overflow-y-auto">
+        
+        <div id="interactive-deck" class="space-y-6 my-auto">
+            <div class="space-y-1">
+                <h2 id="challenge-title" class="text-xl font-bold text-white tracking-tight font-fantasy text-amber-500">The Trial of Identity</h2>
+                <p id="challenge-instructions" class="text-xs text-stone-400 font-semibold">Examine the riddle carefully and project the correct device.</p>
+            </div>
+
+            <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 relative shadow-inner">
+                <div class="absolute -top-2.5 left-4 bg-amber-600 text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow">Riddle Text</div>
+                <p id="riddle-box" class="text-sm md:text-base text-stone-100 font-bold leading-relaxed pt-2"></p>
+                
+                <button id="btn-hint" class="mt-3 flex items-center gap-1.5 text-xs text-amber-500 font-bold hover:text-amber-400 transition-colors focus:outline-none">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                    <span>Consult Spellbook Hint</span>
+                </button>
+                <p id="hint-display" class="hidden mt-2 text-xs text-stone-400 border-t border-stone-800 pt-2 italic font-medium leading-relaxed"></p>
+            </div>
+
+            <div id="choices-container" class="flex flex-col gap-3"></div>
+        </div>
+
+        <div id="learning-modal" class="hidden absolute inset-x-0 bottom-0 top-0 bg-stone-950/95 p-6 flex flex-col justify-between z-20 animate-slide-up border-t-4 border-amber-600">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon-bg" class="p-2.5 rounded-xl text-white">
+                        <i id="modal-icon" data-lucide="shield-alert" class="w-6 h-6"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">THE RHETORIC LAB</h1>
-                        <p class="text-xs text-green-300 font-medium tracking-wide mt-0.5">Interactive Cognitive Engine • Grade 7</p>
+                        <span id="modal-status-tag" class="text-[10px] font-black tracking-widest uppercase block">Result Feedback</span>
+                        <h4 id="modal-heading" class="text-lg font-extrabold text-white">Heading Title</h4>
                     </div>
                 </div>
-            </div>
-            <div class="flex items-center gap-3 self-start md:self-center">
-                <div class="bg-black/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 flex items-center gap-2">
-                    <i data-lucide="zap" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
-                    <span class="text-xs font-bold uppercase text-green-300">XP Points</span>
-                    <span id="score" class="font-black text-xl text-white">0</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="p-6 md:p-8 space-y-6">
-        
-        <div id="strategy-panel" class="bg-gradient-to-r from-green-50 to-emerald-50/50 border border-green-100 rounded-2xl p-5 flex items-start gap-4 transition-all">
-            <div class="p-3 bg-white rounded-xl text-green-800 shadow-sm border border-green-100 shrink-0">
-                <i data-lucide="lightbulb" class="w-5 h-5 text-green-700 fill-green-100"></i>
-            </div>
-            <div class="space-y-1">
-                <h3 class="text-xs font-extrabold text-green-900 uppercase tracking-wider">Cognitive Reading Strategy</h3>
-                <p id="strategy-text" class="text-sm text-gray-700 font-medium leading-relaxed">Analyzing component paths...</p>
-            </div>
-        </div>
+                <p id="modal-feedback-text" class="text-sm text-stone-300 leading-relaxed font-medium"></p>
 
-        <div class="space-y-4">
-            <div class="flex items-center justify-between">
-                <span id="node-badge" class="bg-green-100 text-green-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-green-200">Node 01</span>
-                <div id="interactive-tools" class="flex gap-2">
-                    <button id="btn-highlight" class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 hover:border-blue-400 text-xs font-bold text-gray-600 rounded-lg transition-all">
-                        <i data-lucide="highlighter" class="w-3.5 h-3.5 text-blue-500"></i>
-                        <span>X-Ray Clues</span>
-                    </button>
+                <div class="bg-stone-900 border border-stone-800 rounded-xl p-4 space-y-2">
+                    <h5 class="text-xs font-bold text-amber-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                        Spellbook Rule Explanation
+                    </h5>
+                    <p id="modal-rule-text" class="text-xs text-stone-400 leading-relaxed font-medium"></p>
                 </div>
             </div>
 
-            <h2 id="node-title" class="text-xl font-bold text-gray-900 tracking-tight">Loading Challenge Scenario...</h2>
-            
-            <div class="relative bg-gray-50 border border-gray-200/60 rounded-2xl p-6 shadow-sm">
-                <div class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Source Material</div>
-                <p id="narrative-display" class="text-gray-800 font-semibold text-base leading-relaxed italic"></p>
+            <div class="flex justify-end pt-4">
+                <button id="modal-action-btn" class="flex items-center gap-2 text-stone-950 font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-600/10 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                    <span id="modal-btn-label">Action</span>
+                    <i id="modal-btn-icon" data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
-        </div>
-
-        <div id="choices-grid" class="grid grid-cols-1 gap-3.5"></div>
-
-        <div id="diagnostic-hub" class="hidden rounded-2xl border p-6 space-y-4 shadow-xl transition-all duration-300 transform scale-95">
-            <div class="flex items-start gap-4">
-                <div id="diagnostic-icon-container" class="p-3.5 rounded-xl text-white shrink-0 shadow-md">
-                    <i id="diagnostic-icon" class="w-6 h-6"></i>
-                </div>
-                <div class="space-y-1 flex-1">
-                    <span id="diagnostic-status-tag" class="text-xs font-black uppercase tracking-widest block">STATUS</span>
-                    <h4 id="diagnostic-heading" class="text-lg font-bold text-gray-900">Heading Text</h4>
-                    <p id="diagnostic-body" class="text-sm text-gray-600 font-medium leading-relaxed"></p>
-                </div>
-            </div>
-
-            <div id="breakdown-card" class="bg-white/80 border rounded-xl p-4 space-y-2">
-                <h5 class="text-xs font-extrabold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                    <i data-lucide="binary" class="w-4 h-4 text-gray-400"></i>
-                    Structural Grammar Analysis
-                </h5>
-                <p id="breakdown-text" class="text-xs text-gray-600 font-medium leading-relaxed"></p>
-            </div>
-        </div>
-
-        <div class="flex justify-end pt-2">
-            <button id="action-advance" class="hidden items-center gap-2 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-green-900/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
-                <span>Advance Module</span>
-                <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
-            </button>
-            <button id="action-recalibrate" class="hidden items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-red-700/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
-                <span>Recalibrate Concepts</span>
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-            </button>
         </div>
 
     </div>
 </div>
 
 <script>
-    // Robust Structural Linguistics Dataset mapping linguistic items and active clues
-    const matrixData = {
+    // Pure Game Dataset Engine Mapping Imagery, Choices, and Learning Explanations
+    const gameEngineMatrix = {
         1: {
-            title: "The Ancient Ruins Entrance",
-            badge: "Trial Node 01",
-            strategy: "Isolate terms of identity. When a text declares an entity directly equals a symbol without mapping verbs like 'as', a metaphor is locked.",
-            textNormal: "You approach the stone gate. The script reads: 'The classroom was a zoo during recess.' An automated prompt requests the figure of speech.",
-            textHighlighted: "You approach the stone gate. The script reads: 'The <span class='highlight-target'>classroom</span> <span class='highlight-connector'>was a zoo</span> during recess.' An automated prompt requests the figure of speech.",
+            nodeTag: "Trial Phase 01",
+            title: "Gate of the Forest Guardian",
+            icon: "castle",
+            avatarLabel: "Cabadbaran Ruins Gate",
+            narrative: "An ancient, moss-covered stone sentinel blocks the passage. 'To enter the sanctuary, you must decrypt the phrase upon my chest!'",
+            riddle: "“The classroom <span class='clue-target'>was a zoo</span> during recess.”",
+            hint: "Look closely at 'was a zoo'. It does not use 'like' or 'as' to create a comparison. It directly equates the room to a zoo.",
+            clueText: "“The classroom <span class='clue-highlight'>was a zoo</span> during recess.”",
             choices: [
                 {
-                    label: "Deploy Simile Diagnostic Key",
-                    type: "trap",
-                    icon: "info",
-                    bgClass: "bg-amber-500",
-                    heading: "Structural Alignment Error",
-                    body: "Similes require direct comparative bridges. The system rejected this option because no comparative metrics or structural linking parameters were isolated.",
-                    analysis: "To transform this text into a simile blueprint, it would need to read: 'The classroom was LIKE a zoo'. Because the statement strips away the connector word, it declares direct operational equivalence instead."
+                    text: "Cast a Simile Spell Key",
+                    status: "trap",
+                    heading: "Spell Shield Triggered!",
+                    icon: "shield-alert",
+                    bg: "bg-red-600",
+                    feedback: "The gate glows crimson! The sentinel booms: 'Incorrect casting! A Simile forces clear bridge markers like \"like\" or \"as\". This phrase has no matching connectors!'",
+                    rule: "Similes make descriptions explicit by joining separate concepts using comparative connector keywords. For instance: 'The classroom was LIKE a zoo'."
                 },
                 {
-                    label: "Inject Metaphor Parameter",
-                    type: "success",
-                    icon: "check-circle",
-                    bgClass: "bg-green-600",
-                    heading: "Linguistic Alignment Locked!",
-                    body: "The parameter was accepted cleanly! The direct replacement of the classroom context with a high-energy environment demonstrates a metaphor design model.",
-                    analysis: "Metaphor modules map the sensory characteristics of a secondary element ('zoo') straight onto a primary host ('classroom') to maximize imaginative communication efficiency.",
-                    xp: 50,
+                    text: "Cast a Metaphor Spell Key",
+                    status: "success",
+                    heading: "Barrier Shattered!",
+                    icon: "sparkles",
+                    bg: "bg-emerald-600",
+                    feedback: "The sentinel transforms into safe green light! 'Magnificent grammar insight! You identified a direct equation of state without relying on structural bridges.'",
+                    rule: "Metaphors match two completely separate terms directly to carry descriptions immediately. Calling a wild room a 'zoo' paints a picture cleanly.",
+                    xpReward: 100,
                     jump: 2
                 }
             ]
         },
         2: {
-            title: "The Whispering Courtyard Corridor",
-            badge: "Trial Node 02",
-            strategy: "Audit subject action states. Human-exclusive verbs mapped directly to natural, inanimate hosts indicate active personification.",
-            textNormal: "A strong current sweeps across the path: 'The autumn leaves scraped across the pavement, whispering secrets to the wind.' The digital interface prompts for identification.",
-            textHighlighted: "A strong current sweeps across the path: 'The <span class='highlight-target'>autumn leaves</span> scraped across the pavement, <span class='highlight-connector'>whispering secrets</span> to the wind.' The digital interface prompts for identification.",
+            nodeTag: "Trial Phase 02",
+            title: "The Courtyard of Echoes",
+            icon: "wind",
+            avatarLabel: "Whispering Woods",
+            narrative: "A magical vortex blocks the courtyard bridge. Swirling leaves organize themselves into an active sentence pattern before you.",
+            riddle: "“The autumn leaves scraped across the pavement, <span class='clue-target'>whispering secrets</span> to the wind.”",
+            hint: "Can ordinary autumn leaves physically whisper secrets to each other? Who usually whispers?",
+            clueText: "“The autumn leaves scraped across the pavement, <span class='clue-highlight'>whispering secrets</span> to the wind.”",
             choices: [
                 {
-                    label: "Inject Personification Module",
-                    type: "success",
-                    icon: "check-circle",
-                    bgClass: "bg-green-600",
-                    heading: "Linguistic Alignment Locked!",
-                    body: "Synthesis successful! Giving human speech traits to leaves maps human animation attributes to nature.",
-                    analysis: "Personification acts as an analytical lens, allowing authors to translate organic behaviors into human expressions like sharing secrets, which builds student-text relationships.",
-                    xp: 50,
+                    text: "Channel Personification Essence",
+                    status: "success",
+                    heading: "Vortex Pacified!",
+                    icon: "sparkles",
+                    bg: "bg-emerald-600",
+                    feedback: "The storm winds clear into safe directional path markers! 'Spot on, traveler! You accurately identified human vocal characteristics instilled into lifeless nature.'",
+                    rule: "Personification maps human behaviors, actions, or mental attributes directly onto plants, animals, or objects to bring descriptions to life.",
+                    xpReward: 100,
                     jump: 3
                 },
                 {
-                    label: "Deploy Metaphor Parameter",
-                    type: "trap",
-                    icon: "info",
-                    bgClass: "bg-amber-500",
-                    heading: "Structural Alignment Error",
-                    body: "Metaphors declare identity status rather than actions. The terminal flags this choice as a mismatched logical category error.",
-                    analysis: "The script does not state that leaves *are* people; it merely projects individual human actions onto them. Thus, personification rules apply here."
+                    text: "Channel Metaphor Essence",
+                    status: "trap",
+                    heading: "Elemental Backlash!",
+                    icon: "shield-alert",
+                    bg: "bg-red-600",
+                    feedback: "The vortex blasts you backward! 'Error! The sentence doesn't state that the leaves ARE humans; it gives them human-exclusive actions!'",
+                    rule: "A metaphor substitutes identity directly (e.g., 'The leaves were whispered ghosts'). When objects simply perform human actions, it falls under personification rules."
                 }
             ]
         },
         3: {
-            title: "The Core Vault Crypt",
-            badge: "Final Trial",
-            strategy: "Calibrate statements against empirical possibility. Intentional distortions that magnify scales past biological limits signify hyperbole.",
-            textNormal: "A lockbox demands data confirmation. The prompt reads: 'I am so hungry I could eat an entire elephant right now!' State the matching figure of speech.",
-            textHighlighted: "A lockbox demands data confirmation. The prompt reads: 'I am so hungry I <span class='highlight-connector'>could eat an entire elephant</span> right now!' State the matching figure of speech.",
+            nodeTag: "Final Core Chamber",
+            title: "The Treasury Golem Vault",
+            icon: "box",
+            avatarLabel: "The Amulet Vault",
+            narrative: "A massive mechanical golem protects the treasure chest. It stamps its feet and challenges you to one final validation test.",
+            riddle: "“I am so hungry I <span class='clue-target'>could eat an entire elephant</span> right now!”",
+            hint: "Is it physically, biologically possible for a human being to digest a whole elephant? Or is it an intentional exaggeration?",
+            clueText: "“I am so hungry I <span class='clue-highlight'>could eat an entire elephant</span> right now!”",
             choices: [
                 {
-                    label: "Inject Simile Diagnostic Key",
-                    type: "trap",
-                    icon: "info",
-                    bgClass: "bg-amber-500",
-                    heading: "Structural Alignment Error",
-                    body: "The prompt fails structural criteria checks. No explicit grammatical comparison tools were located in this data sequence.",
-                    analysis: "A simile maps proportional values using specific comparative words. Without 'like' or 'as' embedded within the core phrase structure, a simile cannot form."
+                    text: "Deploy a Simile Core",
+                    status: "trap",
+                    heading: "Systems Overload!",
+                    icon: "shield-alert",
+                    bg: "bg-red-600",
+                    feedback: "The golem charges its weapon system! 'Mismatched properties! There are no explicit connective syntax structures embedded inside this expression!'",
+                    rule: "Similes explicitly connect terms using structural flags ('as' / 'like'). Without those terms present, simile verification algorithms fail."
                 },
                 {
-                    label: "Deploy Hyperbole Parameter",
-                    type: "success",
+                    text: "Deploy a Hyperbole Core",
+                    status: "success",
+                    heading: "The Ancient Amulet Unlocked!",
                     icon: "trophy",
-                    bgClass: "bg-green-600",
-                    heading: "Vault Successfully Unlocked!",
-                    body: "Linguistic synchronization complete! The system verified the statement as an intentional exaggeration designed to measure intense states.",
-                    analysis: "Hyperbole uses magnification mechanisms rather than literal declarations. Eating an entire elephant emphasizes severe hunger, bypassing a literal context to express scale.",
-                    xp: 50,
+                    bg: "bg-amber-500",
+                    feedback: "The golempowers down and safely slides away. 'Incredible analysis! You unlocked the safe path by exposing my massive structural exaggeration.'",
+                    rule: "Hyperbole uses intentional exaggeration to emphasize strong feelings or create a dramatic effect. Eating an elephant emphasizes extreme hunger.",
+                    xpReward: 150,
                     jump: "end"
                 }
             ]
         }
     };
 
-    let currentNode = 1;
-    let pointSystemXP = 0;
-    let overlayModeXray = false;
+    let activeStateNode = 1;
+    let accumulatedXP = 0;
+    let userHeartsRemaining = 3;
 
-    function renderNodeWorkspace(nodeId) {
-        // Sync Vector Graphics engine instances
-        setTimeout(() => lucide.createIcons(), 10);
+    function renderActiveGameStage(nodeId) {
+        setTimeout(() => lucide.createIcons(), 5);
 
-        // Core progress calculations
-        const totalNodes = Object.keys(matrixData).length;
-        const widthPct = nodeId === 'end' ? 100 : ((nodeId - 1) / totalNodes) * 100;
-        document.getElementById('ui-progress').style.width = `${widthPct}%`;
-
-        if (nodeId === 'end') {
-            document.getElementById('strategy-panel').remove();
-            document.getElementById('interactive-tools').remove();
-            document.getElementById('node-badge').innerText = "System Safe";
-            document.getElementById('node-title').innerText = "Core Calibration Finalized";
-            document.getElementById('narrative-display').innerHTML = `🏆 <strong>Mission Success!</strong> All architectural checkpoints have been calibrated correctly. Grade 7 Rhetoric Mastery matrices are operating optimally with a final score of <span class='text-green-700 font-extrabold'>${pointSystemXP} XP</span>.`;
-            document.getElementById('choices-grid').innerHTML = "";
-            document.getElementById('diagnostic-hub').className = "hidden";
-            document.getElementById('action-advance').className = "hidden";
-            document.getElementById('action-recalibrate').className = "hidden";
+        if(nodeId === 'end') {
+            document.getElementById('interactive-deck').innerHTML = `
+                <div class="text-center py-12 animate-slide-up space-y-4">
+                    <div class="inline-flex p-4 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-500 mb-2">
+                        <i data-lucide="trophy" class="w-16 h-16"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-white font-fantasy uppercase tracking-wider text-amber-500">Victory Confirmed!</h2>
+                    <p class="text-stone-300 text-sm leading-relaxed max-w-sm mx-auto">Sensational performance! You conquered all linguistic chambers, completed the Grade 7 learning matrix, and finished with a grand total of ${accumulatedXP} XP!</p>
+                </div>
+            `;
+            // Final Game State Art Update
+            document.getElementById('scene-icon').setAttribute('data-lucide', 'award');
+            document.getElementById('avatar-label').innerText = "Quest Master";
+            document.getElementById('scene-node-tag').innerText = "Complete";
+            document.getElementById('scene-narrative').innerText = "The Amulet of Rhetoric safely power links with your avatar system.";
+            setTimeout(() => lucide.createIcons(), 5);
             return;
         }
 
-        const activeNode = matrixData[nodeId];
-        
-        // Update Terminal Labels
-        document.getElementById('node-badge').innerText = activeNode.badge;
-        document.getElementById('node-title').innerText = activeNode.title;
-        document.getElementById('strategy-text').innerText = activeNode.strategy;
-        
-        // Render Text state based on Clue settings
-        document.getElementById('narrative-display').innerHTML = overlayModeXray ? activeNode.textHighlighted : activeNode.textNormal;
+        const dataNode = gameEngineMatrix[nodeId];
 
-        // Reset Interface Blocks
-        document.getElementById('diagnostic-hub').className = "hidden animate-scale-in";
-        document.getElementById('action-advance').className = "hidden";
-        document.getElementById('action-recalibrate').className = "hidden";
+        // Update Visual Stage Graphics Metadata
+        document.getElementById('scene-node-tag').innerText = dataNode.nodeTag;
+        document.getElementById('scene-narrative').innerText = dataNode.narrative;
+        document.getElementById('avatar-label').innerText = dataNode.avatarLabel;
+        document.getElementById('scene-icon').setAttribute('data-lucide', dataNode.icon);
 
-        // Assemble Component Option Slots
-        const choiceContainer = document.getElementById('choices-grid');
-        choiceContainer.innerHTML = "";
+        // Update Interactive Interface Deck Text fields
+        document.getElementById('challenge-title').innerText = dataNode.title;
+        document.getElementById('riddle-box').innerHTML = dataNode.riddle;
+        document.getElementById('hint-display').innerText = dataNode.hint;
+        document.getElementById('hint-display').classList.add('hidden');
 
-        activeNode.choices.forEach(opt => {
+        // Render Action Selection Buttons
+        const choiceDeck = document.getElementById('choices-container');
+        choiceDeck.innerHTML = "";
+
+        dataNode.choices.forEach(choice => {
             const btn = document.createElement('button');
-            btn.className = "w-full text-left bg-white hover:bg-green-50/20 border-2 border-gray-200 hover:border-green-800 px-5 py-4 rounded-xl font-bold text-gray-700 text-sm transition-all flex justify-between items-center group active:scale-[0.99]";
+            btn.className = "w-full text-left bg-stone-900 border-2 border-stone-800 hover:border-amber-600 hover:bg-stone-850 p-4 rounded-xl font-bold text-stone-200 text-sm transition-all flex items-center justify-between group active:scale-[0.99]";
             btn.innerHTML = `
-                <span>${opt.label}</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                <span>${choice.text}</span>
+                <i data-lucide="crosshair" class="w-4 h-4 text-stone-500 group-hover:text-amber-500 transition-colors"></i>
             `;
-            btn.onclick = () => evaluateChoiceMechanic(opt);
-            choiceContainer.appendChild(btn);
+            btn.onclick = () => evaluateUserGameAction(choice);
+            choiceDeck.appendChild(btn);
         });
 
-        setTimeout(() => lucide.createIcons(), 10);
+        setTimeout(() => lucide.createIcons(), 5);
     }
 
-    function evaluateChoiceMechanic(opt) {
-        const hub = document.getElementById('diagnostic-hub');
-        const iconBox = document.getElementById('diagnostic-icon-container');
-        const iconView = document.getElementById('diagnostic-icon');
-        const tag = document.getElementById('diagnostic-status-tag');
-        
-        // Lock options matrix
-        document.querySelectorAll('#choices-grid button').forEach(b => b.disabled = true);
+    function evaluateUserGameAction(choice) {
+        const modal = document.getElementById('learning-modal');
+        const modalIconBg = document.getElementById('modal-icon-bg');
+        const actionBtn = document.getElementById('modal-action-btn');
 
-        // Update Frame values
-        document.getElementById('diagnostic-heading').innerText = opt.heading;
-        document.getElementById('diagnostic-body').innerText = opt.body;
-        document.getElementById('breakdown-text').innerText = opt.analysis;
+        // Apply text variables to modal layout
+        document.getElementById('modal-heading').innerText = choice.heading;
+        document.getElementById('modal-feedback-text').innerText = choice.feedback;
+        document.getElementById('modal-rule-text').innerText = choice.rule;
 
-        // Sync visual color matrices
-        hub.classList.remove('hidden', 'border-red-200', 'bg-red-50/70', 'border-green-200', 'bg-green-50/70');
-        iconBox.className = `p-3.5 rounded-xl text-white shrink-0 shadow-md ${opt.bgClass}`;
-        iconView.setAttribute('data-lucide', opt.icon);
+        // Apply custom color theme states
+        modalIconBg.className = `p-2.5 rounded-xl text-white ${choice.bg}`;
+        document.getElementById('modal-icon').setAttribute('data-lucide', choice.icon);
 
-        if (opt.type === "success") {
-            // Update Score Tracker values
-            pointSystemXP += opt.xp;
-            document.getElementById('score').innerText = pointSystemXP;
+        if(choice.status === "success") {
+            // Success Path logic
+            accumulatedXP += choice.xpReward;
+            document.getElementById('game-xp').innerText = accumulatedXP;
 
-            hub.classList.add('border-green-200', 'bg-green-50/70');
-            tag.className = "text-xs font-black uppercase tracking-widest block text-green-700";
-            tag.innerText = "System Synced";
+            document.getElementById('modal-status-tag').innerText = "System Synchronized";
+            document.getElementById('modal-status-tag').className = "text-[10px] font-black tracking-widest uppercase block text-emerald-500";
+            
+            actionBtn.className = "flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-stone-950 font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-600/20 transition-all transform hover:-translate-y-0.5";
+            document.getElementById('modal-btn-label').innerText = "Advance Path";
+            document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'arrow-right');
 
-            const advanceBtn = document.getElementById('action-advance');
-            advanceBtn.className = "inline-flex items-center gap-2 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-green-900/20 transition-all transform hover:-translate-y-0.5";
-            advanceBtn.onclick = () => {
-                currentNode = opt.jump;
-                renderNodeWorkspace(currentNode);
+            actionBtn.onclick = () => {
+                modal.classList.add('hidden');
+                activeStateNode = choice.jump;
+                renderActiveGameStage(activeStateNode);
             };
         } else {
-            hub.classList.add('border-amber-200', 'bg-amber-50/70');
-            tag.className = "text-xs font-black uppercase tracking-widest block text-amber-700";
-            tag.innerText = "Conflict Flagged";
+            // Trap path logic
+            userHeartsRemaining--;
+            document.getElementById('game-hearts').innerText = userHeartsRemaining;
+            
+            // Trigger haptic vibration effect
+            document.getElementById('game-viewport').classList.add('animate-shake');
+            setTimeout(() => document.getElementById('game-viewport').classList.remove('animate-shake'), 400);
 
-            const resetBtn = document.getElementById('action-recalibrate');
-            resetBtn.className = "inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:from-amber-800 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-amber-700/20 transition-all transform hover:-translate-y-0.5";
-            resetBtn.onclick = () => renderNodeWorkspace(currentNode);
+            document.getElementById('modal-status-tag').innerText = "Warning Malfunction";
+            document.getElementById('modal-status-tag').className = "text-[10px] font-black tracking-widest uppercase block text-red-500";
+
+            if(userHeartsRemaining <= 0) {
+                // Game Over Loop State
+                document.getElementById('modal-heading').innerText = "Critical System Failure";
+                document.getElementById('modal-feedback-text').innerText = "Your hearts have depleted completely. The grammar defense arrays locked your avatar out of the archive system.";
+                document.getElementById('modal-btn-label').innerText = "Restart Mission";
+                document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'refresh-cw');
+                actionBtn.className = "flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg transition-all";
+                
+                actionBtn.onclick = () => {
+                    userHeartsRemaining = 3;
+                    accumulatedXP = 0;
+                    activeStateNode = 1;
+                    document.getElementById('game-hearts').innerText = userHeartsRemaining;
+                    document.getElementById('game-xp').innerText = accumulatedXP;
+                    modal.classList.add('hidden');
+                    renderActiveGameStage(activeStateNode);
+                };
+            } else {
+                // Standard retry step
+                document.getElementById('modal-btn-label').innerText = "Recalibrate Array";
+                document.getElementById('modal-btn-icon').setAttribute('data-lucide', 'rotate-ccw');
+                actionBtn.className = "flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold text-sm px-6 py-3 rounded-xl border border-stone-700 transition-all";
+                
+                actionBtn.onclick = () => modal.classList.add('hidden');
+            }
         }
 
-        hub.classList.remove('hidden');
-        setTimeout(() => lucide.createIcons(), 10);
+        modal.classList.remove('hidden');
+        setTimeout(() => lucide.createIcons(), 5);
     }
 
-    // Connect X-Ray structural highlighter toggle elements
-    document.getElementById('btn-highlight').onclick = function() {
-        overlayModeXray = !overlayModeXray;
-        this.classList.toggle('border-blue-500');
-        this.classList.toggle('bg-blue-50');
-        this.classList.toggle('text-blue-700');
+    // Connect Hint Activation Actions
+    document.getElementById('btn-hint').onclick = function() {
+        const hb = document.getElementById('hint-display');
+        hb.classList.toggle('hidden');
         
-        // Re-render source string module with highlighted nodes
-        const activeNode = matrixData[currentNode];
-        document.getElementById('narrative-display').innerHTML = overlayModeXray ? activeNode.textHighlighted : activeNode.textNormal;
+        // Dynamic string substitution to trigger custom visual text highlight
+        const activeNode = gameEngineMatrix[activeStateNode];
+        document.getElementById('riddle-box').innerHTML = hb.classList.contains('hidden') ? activeNode.riddle : activeNode.clueText;
     };
 
-    // Run Initial application entry validation sequence
-    renderNodeWorkspace(currentNode);
+    // Bootstrap Entry Ignition Hook
+    renderActiveGameStage(activeStateNode);
 </script>
 
 </body>
