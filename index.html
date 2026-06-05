@@ -3,332 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 2: Enhanced Language Learning Journey</title>
+    <title>Task 2: Advanced Interactive Learning Matrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top right, #f1f8f5 0%, #e8f5e9 100%);
+            background: radial-gradient(circle at 50% 0%, #f4fbf7 0%, #e8f5e9 100%);
         }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(27, 94, 32, 0.08);
+        .neo-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(27, 94, 32, 0.12);
         }
-        /* Custom smooth transition classes */
-        .fade-in {
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .highlight-connector {
+            background-color: #fef08a;
+            border-bottom: 2px dashed #ca8a04;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 700;
         }
-        .scale-up {
-            animation: scaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .highlight-target {
+            background-color: #bfdbfe;
+            border-bottom: 2px dashed #2563eb;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 700;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Fluid Interface Animations */
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.97) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        @keyframes scaleUp {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .animate-scale-in {
+            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
         }
-        /* Pulse glow for educational focal highlights */
-        .glow-pulse {
-            animation: glow 2s infinite ease-in-out;
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 94, 32, 0.2); }
+            50% { transform: scale(1.01); box-shadow: 0 0 0 8px rgba(27, 94, 32, 0); }
         }
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(139, 195, 74, 0); }
+        .pulse-active {
+            animation: subtlePulse 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 antialiased">
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8 antialiased">
 
-<div class="game-container w-full max-w-2xl glass-panel rounded-2xl shadow-2xl overflow-hidden border-t-8 border-green-800">
+<div class="w-full max-w-3xl neo-card rounded-3xl shadow-2xl overflow-hidden border-b-8 border-green-900 animate-scale-in">
     
-    <div class="w-full bg-gray-100 h-2 relative">
-        <div id="progress-bar" class="bg-green-700 h-full w-0 transition-all duration-500 ease-out"></div>
+    <div class="bg-gray-100 h-2 w-full tracking-wide relative">
+        <div id="ui-progress" class="bg-gradient-to-r from-green-600 to-green-800 h-full w-0 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)"></div>
     </div>
 
-    <div class="bg-gradient-to-r from-green-900 to-green-800 text-white p-6 flex justify-between items-center">
-        <div>
-            <h1 class="text-xl font-bold tracking-tight flex items-center gap-2">
-                <i data-lucide="compass" class="w-6 h-6 text-green-300"></i>
-                THE LOST AMULET OF RHETORIC
-            </h1>
-            <p class="text-xs text-green-200 mt-1 italic font-medium opacity-90">Grade 7 Figures of Speech Mastery Quest</p>
-        </div>
-        <div class="flex items-center gap-3 bg-green-950/40 px-4 py-2 rounded-full border border-green-700/30">
-            <span class="text-xs font-bold uppercase tracking-wider text-green-300">Score</span>
-            <span id="score-counter" class="font-bold text-lg text-white transition-all duration-300">0</span>
-        </div>
-    </div>
-    
-    <div class="p-6 md:p-8">
-        
-        <div id="learning-anchor" class="mb-6 bg-amber-50/70 border border-amber-200 rounded-xl p-4 flex items-start gap-3 glow-pulse">
-            <div class="bg-amber-100 p-2 rounded-lg text-amber-800 shrink-0">
-                <i data-lucide="book-open-check" class="w-5 h-5"></i>
-            </div>
+    <div class="bg-gradient-to-br from-green-950 via-green-900 to-green-800 text-white p-6 md:p-8 border-b border-green-700/20">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h3 class="text-sm font-bold text-amber-900 uppercase tracking-wide">Active Strategy Anchor</h3>
-                <p id="learning-strategy-text" class="text-sm text-amber-850 mt-0.5 font-medium leading-relaxed">Loading guide...</p>
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-green-800/60 rounded-xl border border-green-600/30">
+                        <i data-lucide="shield" class="w-6 h-6 text-green-400"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">THE RHETORIC LAB</h1>
+                        <p class="text-xs text-green-300 font-medium tracking-wide mt-0.5">Interactive Cognitive Engine • Grade 7</p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div id="game-card" class="fade-in">
-            <div class="flex items-center gap-2 mb-3">
-                <span id="scene-badge" class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">Scene 1</span>
-                <h2 id="scene-title" class="text-lg font-bold text-gray-800">The Arena Entrance</h2>
-            </div>
-            
-            <p id="narrative" class="text-gray-600 font-medium leading-relaxed bg-gray-50 border border-gray-100 rounded-xl p-5 mb-6 shadow-sm italic"></p>
-            
-            <button id="hint-toggle" class="group mb-4 flex items-center gap-1.5 text-xs font-bold text-green-700 hover:text-green-800 transition-colors focus:outline-none">
-                <i data-lucide="help-circle" class="w-4 h-4 transition-transform group-hover:rotate-12"></i>
-                <span>REVEAL CONTEXTUAL CLUE HINT</span>
-            </button>
-            <div id="hint-box" class="hidden bg-gray-50 border border-dashed border-gray-200 rounded-lg p-3 text-xs text-gray-500 mb-4 transition-all"></div>
-
-            <div id="options" class="flex flex-col gap-3"></div>
-        </div>
-        
-        <div id="feedback" class="hidden mt-6 rounded-xl p-5 border scale-up flex items-start gap-4 shadow-md">
-            <div id="feedback-icon-wrap" class="p-3 rounded-xl shrink-0">
-                <i id="feedback-icon" class="w-6 h-6"></i>
-            </div>
-            <div class="flex-1">
-                <h4 id="feedback-heading" class="font-bold text-base">Feedback</h4>
-                <p id="feedback-text" class="text-sm mt-1 leading-relaxed font-medium"></p>
-                
-                <div id="deep-learning-block" class="mt-3 pt-3 border-t hidden">
-                    <h5 class="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1">
-                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Why this works:
-                    </h5>
-                    <p id="deep-learning-text" class="text-xs text-gray-500 mt-1 font-medium leading-relaxed"></p>
+            <div class="flex items-center gap-3 self-start md:self-center">
+                <div class="bg-black/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <span class="text-xs font-bold uppercase text-green-300">XP Points</span>
+                    <span id="score" class="font-black text-xl text-white">0</span>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="p-6 md:p-8 space-y-6">
         
-        <div class="mt-6 flex justify-end">
-            <button id="next-btn" class="hidden items-center gap-2 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-green-700/20 transition-all duration-150 transform hover:-translate-y-0.5">
-                <span>Advance Path</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <div id="strategy-panel" class="bg-gradient-to-r from-green-50 to-emerald-50/50 border border-green-100 rounded-2xl p-5 flex items-start gap-4 transition-all">
+            <div class="p-3 bg-white rounded-xl text-green-800 shadow-sm border border-green-100 shrink-0">
+                <i data-lucide="lightbulb" class="w-5 h-5 text-green-700 fill-green-100"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-xs font-extrabold text-green-900 uppercase tracking-wider">Cognitive Reading Strategy</h3>
+                <p id="strategy-text" class="text-sm text-gray-700 font-medium leading-relaxed">Analyzing component paths...</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <span id="node-badge" class="bg-green-100 text-green-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-green-200">Node 01</span>
+                <div id="interactive-tools" class="flex gap-2">
+                    <button id="btn-highlight" class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 hover:border-blue-400 text-xs font-bold text-gray-600 rounded-lg transition-all">
+                        <i data-lucide="highlighter" class="w-3.5 h-3.5 text-blue-500"></i>
+                        <span>X-Ray Clues</span>
+                    </button>
+                </div>
+            </div>
+
+            <h2 id="node-title" class="text-xl font-bold text-gray-900 tracking-tight">Loading Challenge Scenario...</h2>
+            
+            <div class="relative bg-gray-50 border border-gray-200/60 rounded-2xl p-6 shadow-sm">
+                <div class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Source Material</div>
+                <p id="narrative-display" class="text-gray-800 font-semibold text-base leading-relaxed italic"></p>
+            </div>
+        </div>
+
+        <div id="choices-grid" class="grid grid-cols-1 gap-3.5"></div>
+
+        <div id="diagnostic-hub" class="hidden rounded-2xl border p-6 space-y-4 shadow-xl transition-all duration-300 transform scale-95">
+            <div class="flex items-start gap-4">
+                <div id="diagnostic-icon-container" class="p-3.5 rounded-xl text-white shrink-0 shadow-md">
+                    <i id="diagnostic-icon" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-1 flex-1">
+                    <span id="diagnostic-status-tag" class="text-xs font-black uppercase tracking-widest block">STATUS</span>
+                    <h4 id="diagnostic-heading" class="text-lg font-bold text-gray-900">Heading Text</h4>
+                    <p id="diagnostic-body" class="text-sm text-gray-600 font-medium leading-relaxed"></p>
+                </div>
+            </div>
+
+            <div id="breakdown-card" class="bg-white/80 border rounded-xl p-4 space-y-2">
+                <h5 class="text-xs font-extrabold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                    <i data-lucide="binary" class="w-4 h-4 text-gray-400"></i>
+                    Structural Grammar Analysis
+                </h5>
+                <p id="breakdown-text" class="text-xs text-gray-600 font-medium leading-relaxed"></p>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-2">
+            <button id="action-advance" class="hidden items-center gap-2 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-green-900/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                <span>Advance Module</span>
+                <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
             </button>
-            <button id="retry-btn" class="hidden items-center gap-2 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-red-600/20 transition-all duration-150 transform hover:-translate-y-0.5">
-                <span>Try Again</span>
-                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <button id="action-recalibrate" class="hidden items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-red-700/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                <span>Recalibrate Concepts</span>
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
         </div>
+
     </div>
 </div>
 
 <script>
-    // Robust dataset tracking core grammar metrics and educational concept models
-    const storyData = {
+    // Robust Structural Linguistics Dataset mapping linguistic items and active clues
+    const matrixData = {
         1: {
-            title: "The Jungle Entrance Gates",
-            badge: "Trial Node 1",
-            strategy: "Look for explicit connections. A metaphor matches concepts directly without declaring comparison signals.",
-            hint: "Focus closely on 'was a zoo'. Is it saying the room was SIMILAR to a zoo, or is it stating it WAS one directly?",
-            narrative: "You stand before the ancient stone ruins of Cabadbaran. Over the crumbling archway, a glowing inscription reads: 'The classroom was a zoo during recess.' A stone guardian blocks the path and bellows, 'Identify the linguistic device fueling this riddle, or remain locked outside forever!'",
+            title: "The Ancient Ruins Entrance",
+            badge: "Trial Node 01",
+            strategy: "Isolate terms of identity. When a text declares an entity directly equals a symbol without mapping verbs like 'as', a metaphor is locked.",
+            textNormal: "You approach the stone gate. The script reads: 'The classroom was a zoo during recess.' An automated prompt requests the figure of speech.",
+            textHighlighted: "You approach the stone gate. The script reads: 'The <span class='highlight-target'>classroom</span> <span class='highlight-connector'>was a zoo</span> during recess.' An automated prompt requests the figure of speech.",
             choices: [
                 {
-                    text: "Deploy a Simile Key.",
-                    status: "trap",
-                    icon: "shield-alert",
-                    heading: "Linguistic Barrier Triggered!",
-                    feedback: "The ground shakes violently! The guardian frowns: 'A simile demands structural connector words such as \"like\" or \"as\" to draw an explicit parallel! Look closer at the architecture.'",
-                    rationale: "In this sentence, the classroom is directly substituted as a 'zoo'. Since it states it *was* a zoo rather than acting *like* a zoo, it bypasses simile architecture entirely."
+                    label: "Deploy Simile Diagnostic Key",
+                    type: "trap",
+                    icon: "info",
+                    bgClass: "bg-amber-500",
+                    heading: "Structural Alignment Error",
+                    body: "Similes require direct comparative bridges. The system rejected this option because no comparative metrics or structural linking parameters were isolated.",
+                    analysis: "To transform this text into a simile blueprint, it would need to read: 'The classroom was LIKE a zoo'. Because the statement strips away the connector word, it declares direct operational equivalence instead."
                 },
                 {
-                    text: "Whisper the phrase: 'Metaphor'.",
-                    status: "success",
-                    icon: "sparkles",
-                    heading: "Safe Passage Granted!",
-                    feedback: "The massive stone arch slides open with a deep rumble. 'Excellent tracking! You recognized a direct equation of a chaotic environment to a zoo without relying on connectors. Proceed into the courtyard!'",
-                    rationale: "Metaphors assert that one thing *is* another thing to apply its traits natively. Saying 'the room was a zoo' instantly paints a picture of noise and wild activity.",
-                    nextScene: 2,
-                    points: 20
+                    label: "Inject Metaphor Parameter",
+                    type: "success",
+                    icon: "check-circle",
+                    bgClass: "bg-green-600",
+                    heading: "Linguistic Alignment Locked!",
+                    body: "The parameter was accepted cleanly! The direct replacement of the classroom context with a high-energy environment demonstrates a metaphor design model.",
+                    analysis: "Metaphor modules map the sensory characteristics of a secondary element ('zoo') straight onto a primary host ('classroom') to maximize imaginative communication efficiency.",
+                    xp: 50,
+                    jump: 2
                 }
             ]
         },
         2: {
-            title: "The Whispering Courtyard",
-            badge: "Trial Node 2",
-            strategy: "Observe the subject actions. If objects perform traits native to humans, you are dealing with personification.",
-            hint: "Can natural leaves purposefully 'whisper secrets' to one another? Who usually whispers?",
-            narrative: "You step into a courtyard overgrown with shifting flora. Suddenly, a cold breeze sweeps through: 'The autumn leaves scraped across the pavement, whispering secrets to the wind.' The air coalesces into a swirling face. 'What magic powers my voice?' it demands.",
+            title: "The Whispering Courtyard Corridor",
+            badge: "Trial Node 02",
+            strategy: "Audit subject action states. Human-exclusive verbs mapped directly to natural, inanimate hosts indicate active personification.",
+            textNormal: "A strong current sweeps across the path: 'The autumn leaves scraped across the pavement, whispering secrets to the wind.' The digital interface prompts for identification.",
+            textHighlighted: "A strong current sweeps across the path: 'The <span class='highlight-target'>autumn leaves</span> scraped across the pavement, <span class='highlight-connector'>whispering secrets</span> to the wind.' The digital interface prompts for identification.",
             choices: [
                 {
-                    text: "Invoke 'Personification!' aloud.",
-                    status: "success",
-                    icon: "sparkles",
-                    heading: "Elemental Path Unlocked!",
-                    feedback: "The vaporous face smiles and disperses into sparkling green path markers. 'Precisely! You recognized human traits—whispering secrets—instilled seamlessly into inanimate autumn leaves. The inner vault opens!'",
-                    rationale: "By pairing the action of whispering secrets (a uniquely human capacity) with physical autumn leaves, the sentence applies personification to bring imagery alive for readers.",
-                    nextScene: 3,
-                    points: 20
+                    label: "Inject Personification Module",
+                    type: "success",
+                    icon: "check-circle",
+                    bgClass: "bg-green-600",
+                    heading: "Linguistic Alignment Locked!",
+                    body: "Synthesis successful! Giving human speech traits to leaves maps human animation attributes to nature.",
+                    analysis: "Personification acts as an analytical lens, allowing authors to translate organic behaviors into human expressions like sharing secrets, which builds student-text relationships.",
+                    xp: 50,
+                    jump: 3
                 },
                 {
-                    text: "Cast a Metaphor Shield.",
-                    status: "trap",
-                    icon: "shield-alert",
-                    heading: "Linguistic Blastback!",
-                    feedback: "The wind pressure increases, knocking your avatar back onto the stone tiles. 'Incorrect! I am not merely equating two entities; I am imbuing the natural landscape with human actions and intelligence! Look deeper.'",
-                    rationale: "A metaphor compares identity. Here, the leaves aren't being called humans; they are simply performing human actions, which makes this personification instead."
+                    label: "Deploy Metaphor Parameter",
+                    type: "trap",
+                    icon: "info",
+                    bgClass: "bg-amber-500",
+                    heading: "Structural Alignment Error",
+                    body: "Metaphors declare identity status rather than actions. The terminal flags this choice as a mismatched logical category error.",
+                    analysis: "The script does not state that leaves *are* people; it merely projects individual human actions onto them. Thus, personification rules apply here."
                 }
             ]
         },
         3: {
-            title: "The Hunger Crypt",
+            title: "The Core Vault Crypt",
             badge: "Final Trial",
-            strategy: "Evaluate statements for literal truth. Massive exaggerations used to make a strong point are classified as hyperbole.",
-            hint: "Think about physical limits. Is it biologically possible for a person to consume a whole elephant in one sitting?",
-            narrative: "Deep within the catacombs, the golden chest rests safely. Guarding it is a giant ruby-eyed golem. He stomps his fist and bellows: 'I am so hungry I could eat an entire elephant right now! Name the figure of speech that anchors my declaration, or turn back!'",
+            strategy: "Calibrate statements against empirical possibility. Intentional distortions that magnify scales past biological limits signify hyperbole.",
+            textNormal: "A lockbox demands data confirmation. The prompt reads: 'I am so hungry I could eat an entire elephant right now!' State the matching figure of speech.",
+            textHighlighted: "A lockbox demands data confirmation. The prompt reads: 'I am so hungry I <span class='highlight-connector'>could eat an entire elephant</span> right now!' State the matching figure of speech.",
             choices: [
                 {
-                    text: "Identify it as a Simile.",
-                    status: "trap",
-                    icon: "shield-alert",
-                    heading: "Impact Registered!",
-                    feedback: "The golem growls and brandishes his fist. 'Where is the structural connector word \"like\" or \"as\" in my statement? Your path ends unless you correct this structural failure!'",
-                    rationale: "Similes require comparison words to build a bridge. Because the golem states 'I could eat...' without using comparative links, it fails to meet simile rules."
+                    label: "Inject Simile Diagnostic Key",
+                    type: "trap",
+                    icon: "info",
+                    bgClass: "bg-amber-500",
+                    heading: "Structural Alignment Error",
+                    body: "The prompt fails structural criteria checks. No explicit grammatical comparison tools were located in this data sequence.",
+                    analysis: "A simile maps proportional values using specific comparative words. Without 'like' or 'as' embedded within the core phrase structure, a simile cannot form."
                 },
                 {
-                    text: "Declare it a Hyperbole.",
-                    status: "success",
+                    label: "Deploy Hyperbole Parameter",
+                    type: "success",
                     icon: "trophy",
-                    heading: "Quest Completed successfully!",
-                    feedback: "The golem laughs heartily, converting his stony form into a harmless pile of gems. 'Splendid work! You unmasked my extreme exaggeration for what it is. The Ancient Amulet of Rhetoric belongs to you!'",
-                    rationale: "Hyperbole leverages wild exaggeration to magnify an emotion or situation. The golem uses the absurd concept of eating an elephant to emphasize severe hunger.",
-                    nextScene: 'end',
-                    points: 20
+                    bgClass: "bg-green-600",
+                    heading: "Vault Successfully Unlocked!",
+                    body: "Linguistic synchronization complete! The system verified the statement as an intentional exaggeration designed to measure intense states.",
+                    analysis: "Hyperbole uses magnification mechanisms rather than literal declarations. Eating an entire elephant emphasizes severe hunger, bypassing a literal context to express scale.",
+                    xp: 50,
+                    jump: "end"
                 }
             ]
         }
     };
 
-    let currentScene = 1;
-    let currentScore = 0;
+    let currentNode = 1;
+    let pointSystemXP = 0;
+    let overlayModeXray = false;
 
-    function renderScene(sceneId) {
-        // Run Lucide conversion utility
-        setTimeout(() => lucide.createIcons(), 5);
+    function renderNodeWorkspace(nodeId) {
+        // Sync Vector Graphics engine instances
+        setTimeout(() => lucide.createIcons(), 10);
 
-        // Calculate progress tracking percentage
-        const totalScenes = Object.keys(storyData).length;
-        const pct = sceneId === 'end' ? 100 : ((sceneId - 1) / totalScenes) * 100;
-        document.getElementById('progress-bar').style.width = `${pct}%`;
+        // Core progress calculations
+        const totalNodes = Object.keys(matrixData).length;
+        const widthPct = nodeId === 'end' ? 100 : ((nodeId - 1) / totalNodes) * 100;
+        document.getElementById('ui-progress').style.width = `${widthPct}%`;
 
-        if(sceneId === 'end') {
-            document.getElementById('learning-anchor').remove();
-            document.getElementById('game-card').innerHTML = `
-                <div class="text-center py-8 scale-up">
-                    <div class="inline-flex p-4 bg-green-100 rounded-full text-green-700 mb-4">
-                        <i data-lucide="award" class="w-12 h-12"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-800">Mastery Complete!</h2>
-                    <p class="text-gray-600 mt-2 max-w-md mx-auto">Outstanding work! You successfully bypassed all linguistic trials, mastered Grade 7 Figures of Speech, and completed the journey with a score of ${currentScore} points.</p>
-                </div>
-            `;
-            document.getElementById('next-btn').style.display = "none";
-            document.getElementById('retry-btn').style.display = "none";
-            document.getElementById('feedback').style.display = "none";
-            setTimeout(() => lucide.createIcons(), 5);
+        if (nodeId === 'end') {
+            document.getElementById('strategy-panel').remove();
+            document.getElementById('interactive-tools').remove();
+            document.getElementById('node-badge').innerText = "System Safe";
+            document.getElementById('node-title').innerText = "Core Calibration Finalized";
+            document.getElementById('narrative-display').innerHTML = `🏆 <strong>Mission Success!</strong> All architectural checkpoints have been calibrated correctly. Grade 7 Rhetoric Mastery matrices are operating optimally with a final score of <span class='text-green-700 font-extrabold'>${pointSystemXP} XP</span>.`;
+            document.getElementById('choices-grid').innerHTML = "";
+            document.getElementById('diagnostic-hub').className = "hidden";
+            document.getElementById('action-advance').className = "hidden";
+            document.getElementById('action-recalibrate').className = "hidden";
             return;
         }
 
-        const scene = storyData[sceneId];
+        const activeNode = matrixData[nodeId];
         
-        // Reset Card Component Values
-        document.getElementById('scene-badge').innerText = scene.badge;
-        document.getElementById('scene-title').innerText = scene.title;
-        document.getElementById('learning-strategy-text').innerText = scene.strategy;
-        document.getElementById('narrative').innerText = scene.narrative;
+        // Update Terminal Labels
+        document.getElementById('node-badge').innerText = activeNode.badge;
+        document.getElementById('node-title').innerText = activeNode.title;
+        document.getElementById('strategy-text').innerText = activeNode.strategy;
         
-        // Set hint content
-        const hintBox = document.getElementById('hint-box');
-        hintBox.innerText = scene.hint;
-        hintBox.classList.add('hidden');
+        // Render Text state based on Clue settings
+        document.getElementById('narrative-display').innerHTML = overlayModeXray ? activeNode.textHighlighted : activeNode.textNormal;
 
-        // Hide Actions UI elements
-        document.getElementById('next-btn').style.display = "none";
-        document.getElementById('retry-btn').style.display = "none";
-        document.getElementById('feedback').style.display = "none";
+        // Reset Interface Blocks
+        document.getElementById('diagnostic-hub').className = "hidden animate-scale-in";
+        document.getElementById('action-advance').className = "hidden";
+        document.getElementById('action-recalibrate').className = "hidden";
 
-        const optionsContainer = document.getElementById('options');
-        optionsContainer.innerHTML = "";
+        // Assemble Component Option Slots
+        const choiceContainer = document.getElementById('choices-grid');
+        choiceContainer.innerHTML = "";
 
-        // Build Buttons
-        scene.choices.forEach(choice => {
-            const button = document.createElement('button');
-            button.className = 'option-btn flex justify-between items-center bg-white border-2 border-gray-200 hover:border-green-700 hover:bg-green-50/30 p-4 rounded-xl cursor-pointer font-semibold text-gray-700 text-sm transition-all duration-200 transform active:scale-[0.99]';
-            button.innerHTML = `
-                <span>${choice.text}</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
+        activeNode.choices.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left bg-white hover:bg-green-50/20 border-2 border-gray-200 hover:border-green-800 px-5 py-4 rounded-xl font-bold text-gray-700 text-sm transition-all flex justify-between items-center group active:scale-[0.99]";
+            btn.innerHTML = `
+                <span>${opt.label}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
             `;
-            button.onclick = () => handleChoice(choice);
-            optionsContainer.appendChild(button);
+            btn.onclick = () => evaluateChoiceMechanic(opt);
+            choiceContainer.appendChild(btn);
         });
 
-        setTimeout(() => lucide.createIcons(), 5);
+        setTimeout(() => lucide.createIcons(), 10);
     }
 
-    function handleChoice(choice) {
-        const feedbackDiv = document.getElementById('feedback');
-        const iconWrap = document.getElementById('feedback-icon-wrap');
-        const iconEl = document.getElementById('feedback-icon');
+    function evaluateChoiceMechanic(opt) {
+        const hub = document.getElementById('diagnostic-hub');
+        const iconBox = document.getElementById('diagnostic-icon-container');
+        const iconView = document.getElementById('diagnostic-icon');
+        const tag = document.getElementById('diagnostic-status-tag');
         
-        // Disable choices
-        document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+        // Lock options matrix
+        document.querySelectorAll('#choices-grid button').forEach(b => b.disabled = true);
 
-        // Apply updated text parameters
-        document.getElementById('feedback-heading').innerText = choice.heading;
-        document.getElementById('feedback-text').innerText = choice.feedback;
-        document.getElementById('deep-learning-text').innerText = choice.rationale;
-        document.getElementById('deep-learning-block').classList.remove('hidden');
+        // Update Frame values
+        document.getElementById('diagnostic-heading').innerText = opt.heading;
+        document.getElementById('diagnostic-body').innerText = opt.body;
+        document.getElementById('breakdown-text').innerText = opt.analysis;
 
-        // Toggle state elements dynamically
-        feedbackDiv.classList.remove('hidden', 'bg-red-50', 'border-red-200', 'text-red-900', 'bg-green-50', 'border-green-200', 'text-green-900');
-        iconWrap.classList.remove('bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+        // Sync visual color matrices
+        hub.classList.remove('hidden', 'border-red-200', 'bg-red-50/70', 'border-green-200', 'bg-green-50/70');
+        iconBox.className = `p-3.5 rounded-xl text-white shrink-0 shadow-md ${opt.bgClass}`;
+        iconView.setAttribute('data-lucide', opt.icon);
 
-        if(choice.status === 'success') {
-            // Apply Points
-            currentScore += choice.points;
-            document.getElementById('score-counter').innerText = currentScore;
-            
-            feedbackDiv.classList.add('bg-green-50', 'border-green-200', 'text-green-900');
-            iconWrap.classList.add('bg-green-100', 'text-green-800');
-            iconEl.setAttribute('data-lucide', choice.icon);
-            
-            const nextBtn = document.getElementById('next-btn');
-            nextBtn.style.display = "inline-flex";
-            nextBtn.onclick = () => {
-                currentScene = choice.nextScene;
-                renderScene(currentScene);
+        if (opt.type === "success") {
+            // Update Score Tracker values
+            pointSystemXP += opt.xp;
+            document.getElementById('score').innerText = pointSystemXP;
+
+            hub.classList.add('border-green-200', 'bg-green-50/70');
+            tag.className = "text-xs font-black uppercase tracking-widest block text-green-700";
+            tag.innerText = "System Synced";
+
+            const advanceBtn = document.getElementById('action-advance');
+            advanceBtn.className = "inline-flex items-center gap-2 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-green-900/20 transition-all transform hover:-translate-y-0.5";
+            advanceBtn.onclick = () => {
+                currentNode = opt.jump;
+                renderNodeWorkspace(currentNode);
             };
         } else {
-            feedbackDiv.classList.add('bg-red-50', 'border-red-200', 'text-red-900');
-            iconWrap.classList.add('bg-red-100', 'text-red-800');
-            iconEl.setAttribute('data-lucide', choice.icon);
-            
-            const retryBtn = document.getElementById('retry-btn');
-            retryBtn.style.display = "inline-flex";
-            retryBtn.onclick = () => renderScene(currentScene);
+            hub.classList.add('border-amber-200', 'bg-amber-50/70');
+            tag.className = "text-xs font-black uppercase tracking-widest block text-amber-700";
+            tag.innerText = "Conflict Flagged";
+
+            const resetBtn = document.getElementById('action-recalibrate');
+            resetBtn.className = "inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:from-amber-800 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-amber-700/20 transition-all transform hover:-translate-y-0.5";
+            resetBtn.onclick = () => renderNodeWorkspace(currentNode);
         }
 
-        setTimeout(() => lucide.createIcons(), 5);
+        hub.classList.remove('hidden');
+        setTimeout(() => lucide.createIcons(), 10);
     }
 
-    // Toggle logic for hints
-    document.getElementById('hint-toggle').onclick = () => {
-        const hb = document.getElementById('hint-box');
-        hb.classList.toggle('hidden');
+    // Connect X-Ray structural highlighter toggle elements
+    document.getElementById('btn-highlight').onclick = function() {
+        overlayModeXray = !overlayModeXray;
+        this.classList.toggle('border-blue-500');
+        this.classList.toggle('bg-blue-50');
+        this.classList.toggle('text-blue-700');
+        
+        // Re-render source string module with highlighted nodes
+        const activeNode = matrixData[currentNode];
+        document.getElementById('narrative-display').innerHTML = overlayModeXray ? activeNode.textHighlighted : activeNode.textNormal;
     };
 
-    // Run Initial Setup Entry Point
-    renderScene(currentScene);
+    // Run Initial application entry validation sequence
+    renderNodeWorkspace(currentNode);
 </script>
 
 </body>
