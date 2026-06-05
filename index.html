@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Language Masterclass: Grammar & Pronunciation</title>
+    <title>Advanced Language Learning Lab: Grammar & Pronunciation</title>
     <style>
         :root {
-            --primary: #1e3a8a;
-            --secondary: #0d9488;
-            --accent: #f59e0b;
+            --primary: #1b4332;
+            --secondary: #40916c;
+            --accent: #d97706;
             --subject-color: #2563eb;
             --verb-color: #16a34a;
-            --bg: #f8fafc;
+            --bg: #f4f7f6;
             --card-bg: #ffffff;
-            --text: #1e293b;
+            --text: #2d3748;
         }
 
         body {
@@ -31,16 +31,15 @@
 
         .tutorial-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             background: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
             padding: 40px;
             position: relative;
             overflow: hidden;
         }
 
-        /* Slide Control structure */
         .slide {
             display: none;
             animation: fadeIn 0.4s ease-in-out forwards;
@@ -70,18 +69,18 @@
             padding: 4px 10px;
             border-radius: 20px;
             text-transform: uppercase;
+            font-weight: bold;
         }
 
         .highlight-subject { color: var(--subject-color); font-weight: bold; }
         .highlight-verb { color: var(--verb-color); font-weight: bold; }
 
-        /* Unified Audio Button styling */
         .audio-btn {
             background: #e2e8f0;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -92,32 +91,15 @@
 
         .audio-btn:hover {
             background: #cbd5e1;
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .audio-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: var(--primary);
         }
 
-        /* Micro-interactions: Clickable syllables */
-        .syllable {
-            cursor: pointer;
-            padding: 2px 6px;
-            background: #f1f5f9;
-            border-radius: 4px;
-            transition: background 0.2s;
-            border: 1px dashed #cbd5e1;
-            display: inline-block;
-            margin: 0 2px;
-        }
-        .syllable:hover {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        /* Practice & Example display boxes */
         .display-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -129,16 +111,16 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
 
         .phonetic {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--secondary);
             font-weight: bold;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .sentence-box {
@@ -153,7 +135,41 @@
             align-items: center;
         }
 
-        /* Interactive Quiz Layouts */
+        /* Lab Task styling */
+        .lab-box {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mic-btn {
+            background: #d97706;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .mic-btn.recording {
+            background: #dc2626;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+
         .quiz-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -165,7 +181,6 @@
             background: white;
             border: 2px solid #cbd5e1;
             padding: 15px;
-            font-size: 1.1rem;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -188,42 +203,6 @@
         .feedback.correct { display: block; background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .feedback.wrong { display: block; background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
-        /* Speech Sandbox Mic Feature */
-        .mic-container {
-            background: #fff7ed;
-            border: 2px dashed var(--accent);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        .mic-btn {
-            background: #ea580c;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: background 0.2s;
-        }
-
-        .mic-btn.recording {
-            background: #dc2626;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Nav panel elements */
         .navigation {
             display: flex;
             justify-content: space-between;
@@ -258,7 +237,7 @@
         .progress-fill {
             height: 100%;
             background: var(--secondary);
-            width: 12.5%;
+            width: 10%;
             transition: width 0.3s ease;
         }
     </style>
@@ -266,267 +245,269 @@
 <body>
 
     <div class="tutorial-container">
-        <!-- Horizontal Progress Fill -->
         <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
 
-        <!-- SLIDE 1: GENERAL INTRODUCTION -->
+        <!-- SLIDE 1: INTRODUCTION -->
         <div class="slide active" id="slide-1">
-            <h1>Language Learning Interactive Masterclass</h1>
-            <p>Welcome! This expanded learning tutorial covers two vital pillars of English fluency:</p>
-            <ol style="font-size: 1.1rem; padding-left: 20px;">
-                <li><strong>Pronunciation Module:</strong> Distinguishing tricky minimal pairs (/iː/ vs /ɪ/) and practicing word stress patterns.</li>
-                <li><strong>Grammar Module:</strong> Mastering the Rule of Proximity with <em>Either/Or</em> and <em>Neither/Nor</em> subjects.</li>
-            </ol>
-            <p><strong>How to use:</strong> Click on any speaker button (<button class="audio-btn" style="pointer-events: none; width:24px; height:24px;"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>) to hear native models, or click underlined target syllables to hear pronunciation pointers!</p>
+            <h1>Language Mastery: Grammar & Pronunciation Lab</h1>
+            <p>Welcome to this comprehensive digital instructional environment! This app handles advanced phonetics training alongside crucial syntax principles.</p>
+            <p><strong>What you will accomplish:</strong></p>
+            <ul>
+                <li>Master <strong>Minimal Vowel Pairs</strong> (/iː/ vs /ɪ/) & <strong>Consonant Voicing contrasts</strong> (/s/ vs /z/).</li>
+                <li>Conquer the grammatical <strong>Proximity Rule</strong> for complex subjects.</li>
+                <li>Complete <strong>5 Interactive Pronunciation Lab Exercises</strong> using real-time vocal streaming analysis.</li>
+            </ul>
         </div>
 
-        <!-- SLIDE 2: PRONUNCIATION LESSON (MINIMAL PAIRS) -->
+        <!-- SLIDE 2: EXPANDED PRONUNCIATION EXAMPLES -->
         <div class="slide" id="slide-2">
-            <h2><span class="badge">Pronunciation</span> Vowel Contrast: Long /iː/ vs Short /ɪ/</h2>
-            <p>Mispronouncing these vowels can completely change your intended meaning. Listen carefully to the differences below:</p>
+            <h2><span class="badge">Phonetics</span> Core Vowel & Consonant Contrasts</h2>
+            <p>Listen closely to how a minute shift in vowel length or cord vibration changes a word completely:</p>
             
             <div class="display-grid">
                 <div class="card">
-                    <h3>The Long /iː/ Sound</h3>
-                    <div class="phonetic">"ee" /iː/</div>
-                    <p>Mouth shapes into a wide smile. Lips are tense.</p>
-                    <button class="audio-btn" onclick="speakText('Sheep, Sheet, Meet, Principal')">
-                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
-                    </button>
-                    <p style="margin-top:10px;"><em>Examples:</em> <strong>Sheep</strong>, <strong>Sheet</strong></p>
+                    <h3>Long Vowel /iː/ (Tense Smile)</h3>
+                    <div class="phonetic">"ee" sound</div>
+                    <button class="audio-btn" onclick="speakText('Seat, Reach, Least, Feet')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                    <p><strong>Seat</strong> /siːt/<br><strong>Reach</strong> /riːtʃ/<br><strong>Least</strong> /liːst/</p>
                 </div>
-                
                 <div class="card">
-                    <h3>The Short /ɪ/ Sound</h3>
-                    <div class="phonetic">"ih" /ɪ/</div>
-                    <p>Mouth is relaxed, lips are slightly open and loose.</p>
-                    <button class="audio-btn" onclick="speakText('Ship, Shit, Mit, Principal')">
-                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg>
-                    </button>
-                    <p style="margin-top:10px;"><em>Examples:</em> <strong>Ship</strong>, <strong>Bit</strong></p>
+                    <h3>Short Vowel /ɪ/ (Relaxed Jaw)</h3>
+                    <div class="phonetic">"ih" sound</div>
+                    <button class="audio-btn" onclick="speakText('Sit, Rich, List, Fit')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                    <p><strong>Sit</strong> /sɪt/<br><strong>Rich</strong> /rɪtʃ/<br><strong>List</strong> /lɪst/</p>
+                </div>
+            </div>
+
+            <div class="display-grid">
+                <div class="card">
+                    <h3>Unvoiced /s/ (Hissing Air)</h3>
+                    <div class="phonetic">No Vocal Cord Vibration</div>
+                    <button class="audio-btn" onclick="speakText('Price, Advice, Bus')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                    <p><strong>Price</strong> /praɪs/<br><strong>Advice</strong> /ədˈvaɪs/</p>
+                </div>
+                <div class="card">
+                    <h3>Voiced /z/ (Buzzing Buzz)</h3>
+                    <div class="phonetic">Vocal Cords Vibrate</div>
+                    <button class="audio-btn" onclick="speakText('Prize, Advise, Buzz')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                    <p><strong>Prize</strong> /praɪz/<br><strong>Advise</strong> /ədˈvaɪz/</p>
                 </div>
             </div>
         </div>
 
-        <!-- SLIDE 3: INTERACTIVE WORD STRESS PRACTISE -->
+        <!-- SLIDE 3: THE GRAMMAR SYNTAX PRINCIPLE -->
         <div class="slide" id="slide-3">
-            <h2><span class="badge">Pronunciation</span> Word Stress & Syllables</h2>
-            <p>In English, we do not emphasize every syllable equally. Click on the <strong>red colored parts</strong> below to discover where the emphasis (the vocal punch) belongs:</p>
-
+            <h2><span class="badge">Grammar</span> Syntax Rule: The Proximity Window</h2>
+            <p>When working with correlative conjunctions like <strong>either...or</strong> and <strong>neither...nor</strong>, match your verb to the **closest subject element**.</p>
+            
             <div class="sentence-box">
-                <div>
-                    <span>Word 1: </span>
-                    <span class="syllable" style="color:red; font-weight:bold;" onclick="speakText('Prin')">PRIN</span>-
-                    <span class="syllable" onclick="speakText('ci')">ci</span>-
-                    <span class="syllable" onclick="speakText('pal')">pal</span>
-                </div>
-                <button class="audio-btn" onclick="speakText('Principal')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                <span>"Neither the schedule nor the <span class="highlight-subject">employees</span> <span class="highlight-verb">are</span> changing."</span>
+                <button class="audio-btn" onclick="speakText('Neither the schedule nor the employees are changing.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
             </div>
-
-            <div class="sentence-box">
-                <div>
-                    <span>Word 2: </span>
-                    <span class="syllable" onclick="speakText('em')">em</span>-
-                    <span class="syllable" style="color:red; font-weight:bold;" onclick="speakText('ploy')">PLOY</span>-
-                    <span class="syllable" onclick="speakText('ees')">ees</span>
-                </div>
-                <button class="audio-btn" onclick="speakText('Employees')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
-            </div>
-            <p><small>*Notice how 'Employees' has a strong secondary emphasis on the ending long /iː/ vowel sound too!</small></p>
+            <p>Because the plural noun <strong>employees</strong> sits immediately next to the action slot, the plural verb <span class="highlight-verb">are</span> is required.</p>
         </div>
 
-        <!-- SLIDE 4: THE PROXIMITY GRAMMAR RULE -->
+        <!-- SLIDE 4: GRAMMAR QUIZ INTERACTION -->
         <div class="slide" id="slide-4">
-            <h2><span class="badge">Grammar</span> The Proximity Rule Reminder</h2>
-            <p>Now let's map these terms to a sentence structural layout. When connecting multiple subjects using <strong>Either/Or</strong> or <strong>Neither/Nor</strong>:</p>
-            <blockquote style="background: #eff6ff; border-left: 4px solid var(--subject-color); padding: 15px; font-style: italic;">
-                "The structural verb does not care about the first subject element. It must match only with whichever subject sits physically closest to it."
-            </blockquote>
-            <p>Let's inspect how shifting word arrangements flips our plural and singular expressions instantly.</p>
-        </div>
-
-        <!-- SLIDE 5: GRAMMAR CASE A (SINGULAR CLOSEST) -->
-        <div class="slide" id="slide-5">
-            <h2><span class="badge">Grammar</span> Scenario A: Nearest Subject is Singular</h2>
+            <h2><span class="badge">Quiz</span> Quick Syntax Check</h2>
+            <p>Pick the proper verb option to complete the phrase correctly:</p>
             <div class="sentence-box">
-                <span>"Neither the teachers nor the <span class="highlight-subject">principal</span> <span class="highlight-verb">is</span> coming."</span>
-                <button class="audio-btn" onclick="speakText('Neither the teachers nor the principal is coming.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                <span>"Either the supervisors or the <span class="highlight-subject">manager</span> ________ checking the laboratory equipment."</span>
             </div>
-            <p><strong>Structural Breakdown:</strong></p>
-            <ul>
-                <li>Subject 1: <em>teachers</em> (Plural)</li>
-                <li>Subject 2: <span class="highlight-subject">principal</span> (Singular &rarr; <strong>Closest to Verb</strong>)</li>
-                <li>Resulting Action Verb: <span class="highlight-verb">is</span> (Singular form matches perfectly)</li>
-            </ul>
-        </div>
-
-        <!-- SLIDE 6: GRAMMAR CASE B (PLURAL CLOSEST) -->
-        <div class="slide" id="slide-6">
-            <h2><span class="badge">Grammar</span> Scenario B: Nearest Subject is Plural</h2>
-            <div class="sentence-box">
-                <span>"Either the principal or the <span class="highlight-subject">teachers</span> <span class="highlight-verb">are</span> coming."</span>
-                <button class="audio-btn" onclick="speakText('Either the principal or the teachers are coming.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
-            </div>
-            <p><strong>Structural Breakdown:</strong></p>
-            <ul>
-                <li>Subject 1: <em>principal</em> (Singular)</li>
-                <li>Subject 2: <span class="highlight-subject">teachers</span> (Plural &rarr; <strong>Closest to Verb</strong>)</li>
-                <li>Resulting Action Verb: <span class="highlight-verb">are</span> (Plural variant matches perfectly)</li>
-            </ul>
-        </div>
-
-        <!-- SLIDE 7: INTEGRATED MOCK EXAM CHALLENGE -->
-        <div class="slide" id="slide-7">
-            <h2><span class="badge">Quiz</span> Cumulative Assessment</h2>
-            <p>Combine your skills! Analyze the sentence layout for the missing verb position:</p>
-            
-            <div class="sentence-box">
-                <span id="quiz-prompt">"Neither the manager nor the <strong>employees</strong> ________ satisfied with the terms."</span>
-                <button class="audio-btn" onclick="speakText('Neither the manager nor the employees blank satisfied with the terms.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
-            </div>
-
             <div class="quiz-options">
-                <button class="quiz-btn" onclick="evaluateQuizResponse('is')">Option A: is</button>
-                <button class="quiz-btn" onclick="evaluateQuizResponse('are')">Option B: are</button>
+                <button class="quiz-btn" onclick="checkGrammarQuiz('is')">Option A: is</button>
+                <button class="quiz-btn" onclick="checkGrammarQuiz('are')">Option B: are</button>
             </div>
-
-            <div id="quiz-alert" class="feedback"></div>
+            <div id="quiz-feedback" class="feedback"></div>
         </div>
 
-        <!-- SLIDE 8: SPEECH PRACTICE LAB & OUTRO -->
+        <!-- ================= LABORATORY EXERCISES ================= -->
+
+        <!-- SLIDE 5: LAB TASK 1 -->
+        <div class="slide" id="slide-5">
+            <h2><span class="badge">Lab 1</span> Long Vowel Target (/iː/)</h2>
+            <p>Listen to the target phrase first, then click record and read it clearly into your microphone:</p>
+            <div class="lab-box">
+                <h3 style="color:var(--accent);">"Please keep your seat on the green team." 
+                    <button class="audio-btn" onclick="speakText('Please keep your seat on the green team.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                </h3>
+                <button class="mic-btn" id="mic-1" onclick="startSpeechLab(1, 'please keep your seat on the green team')">Start Recording</button>
+                <p id="output-1" style="margin-top:15px; font-style:italic; color:#4a5568;">Click to begin verbal assessment...</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: LAB TASK 2 -->
+        <div class="slide" id="slide-6">
+            <h2><span class="badge">Lab 2</span> Short Vowel Target (/ɪ/)</h2>
+            <p>Focus on avoiding the "ee" smile sound. Keep your jaw loose and short:</p>
+            <div class="lab-box">
+                <h3 style="color:var(--accent);">"The thin kid slipped a big silver pin." 
+                    <button class="audio-btn" onclick="speakText('The thin kid slipped a big silver pin.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                </h3>
+                <button class="mic-btn" id="mic-2" onclick="startSpeechLab(2, 'the thin kid slipped a big silver pin')">Start Recording</button>
+                <p id="output-2" style="margin-top:15px; font-style:italic; color:#4a5568;">Click to begin verbal assessment...</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: LAB TASK 3 -->
+        <div class="slide" id="slide-7">
+            <h2><span class="badge">Lab 3</span> Vowel Contrast Mix (/iː/ vs /ɪ/)</h2>
+            <p>Switch fluidly between long and short structures back-to-back:</p>
+            <div class="lab-box">
+                <h3 style="color:var(--accent);">"He believes this simple ship leaks oil." 
+                    <button class="audio-btn" onclick="speakText('He believes this simple ship leaks oil.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                </h3>
+                <button class="mic-btn" id="mic-3" onclick="startSpeechLab(3, 'he believes this simple ship leaks oil')">Start Recording</button>
+                <p id="output-3" style="margin-top:15px; font-style:italic; color:#4a5568;">Click to begin verbal assessment...</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: LAB TASK 4 -->
         <div class="slide" id="slide-8">
-            <h2><span class="badge">Lab</span> Oral Speech Recording Playground</h2>
-            <p>Let's put your pronunciation to the test! Click the record toggle button below and read the goal sentence out loud into your microphone device:</p>
-            
-            <div class="sentence-box" style="justify-content: center; font-weight: bold; background:#fff;">
-                "The principal wants to meet the new employees."
+            <h2><span class="badge">Lab 4</span> Consonant Voicing (/s/ vs /z/)</h2>
+            <p>Ensure your vocal cords vibrate dynamically on the /z/ ending sounds:</p>
+            <div class="lab-box">
+                <h3 style="color:var(--accent);">"His wise advice won the grand prize." 
+                    <button class="audio-btn" onclick="speakText('His wise advice won the grand prize.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                </h3>
+                <button class="mic-btn" id="mic-4" onclick="startSpeechLab(4, 'his wise advice won the grand prize')">Start Recording</button>
+                <p id="output-4" style="margin-top:15px; font-style:italic; color:#4a5568;">Click to begin verbal assessment...</p>
             </div>
-
-            <div class="mic-container">
-                <button class="mic-btn" id="recordBtn" onclick="toggleSpeechRecognition()">
-                    <span>Start Recording Practice</span>
-                </button>
-                <p id="transcriptionOutput" style="margin-top: 15px; color: #64748b; font-style: italic;">Your recorded vocal translation will stream here...</p>
-            </div>
-            
-            <h3 style="margin-top:30px; text-align:center;">Congratulations! Module Complete. 🎉</h3>
         </div>
 
-        <!-- Main Slide Controls Panel -->
+        <!-- SLIDE 9: LAB TASK 5 -->
+        <div class="slide" id="slide-9">
+            <h2><span class="badge">Lab 5</span> Cumulative Synthesis Challenge</h2>
+            <p>Read this complete proximity grammar sentence aloud with proper vowel lengths and noun stresses:</p>
+            <div class="lab-box">
+                <h3 style="color:var(--accent);">"Neither the manager nor the employees are happy." 
+                    <button class="audio-btn" onclick="speakText('Neither the manager nor the employees are happy.')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4.01z"/></svg></button>
+                </h3>
+                <button class="mic-btn" id="mic-5" onclick="startSpeechLab(5, 'neither the manager nor the employees are happy')">Start Recording</button>
+                <p id="output-5" style="margin-top:15px; font-style:italic; color:#4a5568;">Click to begin verbal assessment...</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: WRAP UP -->
+        <div class="slide" id="slide-10">
+            <h2>All Laboratory Work Complete! 🎉</h2>
+            <p>Excellent progress. You have successfully designed and tested your responses using integrated, high-tier digital features.</p>
+            <p>Review your phonetics and syntax whenever needed by cycling back to the start of this application module.</p>
+        </div>
+
+        <!-- Control Buttons -->
         <div class="navigation">
-            <button class="nav-btn" id="backBtn" onclick="navigateSlide(-1)" disabled>Back</button>
-            <button class="nav-btn" id="forwardBtn" onclick="navigateSlide(1)">Next Slide</button>
+            <button class="nav-btn" id="prevBtn" onclick="moveSlide(-1)" disabled>Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="moveSlide(1)">Next Slide</button>
         </div>
     </div>
 
     <script>
-        let currentActiveSlide = 1;
-        const totalAvailableSlides = 8;
-        let recognitionEngine = null;
-        let isRecordingVocal = false;
+        let currentSlideIdx = 1;
+        const finalSlideCount = 10;
+        let speechRecognitionInstance = null;
+        let activeRecordingState = false;
 
-        function navigateSlide(stepDirection) {
-            // Un-assign current container visibility class
-            document.getElementById(`slide-${currentActiveSlide}`).classList.remove('active');
-            
-            currentActiveSlide += stepDirection;
-            
-            // Re-assign active layer
-            document.getElementById(`slide-${currentActiveSlide}`).classList.add('active');
+        function moveSlide(offset) {
+            document.getElementById(`slide-${currentSlideIdx}`).classList.remove('active');
+            currentSlideIdx += offset;
+            document.getElementById(`slide-${currentSlideIdx}`).classList.add('active');
 
-            // Set button disabled attributes dynamically
-            document.getElementById('backBtn').disabled = (currentActiveSlide === 1);
+            document.getElementById('prevBtn').disabled = (currentSlideIdx === 1);
             
-            if (currentActiveSlide === totalAvailableSlides) {
-                document.getElementById('forwardBtn').innerText = "Finish Lessons";
-                document.getElementById('forwardBtn').disabled = true;
+            if (currentSlideIdx === finalSlideCount) {
+                document.getElementById('nextBtn').innerText = "Finish Lab";
+                document.getElementById('nextBtn').disabled = true;
             } else {
-                document.getElementById('forwardBtn').innerText = "Next Slide";
-                document.getElementById('forwardBtn').disabled = false;
+                document.getElementById('nextBtn').innerText = "Next Slide";
+                document.getElementById('nextBtn').disabled = false;
             }
 
-            // Calculate progress 
-            const completedMetric = (currentActiveSlide / totalAvailableSlides) * 100;
-            document.getElementById('progress').style.width = `${completedMetric}%`;
+            const scalePercentage = (currentSlideIdx / finalSlideCount) * 100;
+            document.getElementById('progress').style.width = `${scalePercentage}%`;
         }
 
-        // Native Browser Audio Synthesis engine
         function speakText(phrases) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // kill overlapping voice cues
-                const vocalization = new SpeechSynthesisUtterance(phrases);
-                vocalization.lang = 'en-US';
-                vocalization.rate = 0.85; // slightly modified cadence for easy phonetic tracking
-                window.speechSynthesis.speak(vocalization);
-            } else {
-                alert("Your integrated client hardware environment does not support Web Speech APIs.");
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(phrases);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.88;
+                window.speechSynthesis.speak(utterance);
             }
         }
 
-        // Live assessment calculations
-        function evaluateQuizResponse(selectedVerbValue) {
-            const feedbackContainer = document.getElementById('quiz-alert');
-            if (selectedVerbValue === 'are') {
-                feedbackContainer.className = "feedback correct";
-                feedbackContainer.innerHTML = "<strong>Fantastic Job!</strong> 'Employees' is a plural noun target and sits closest to the verb selection blank. 'Are' matches perfectly!";
-                speakText("Correct answer! The plural subject employees needs the plural verb are.");
-                document.getElementById('forwardBtn').disabled = false;
+        function checkGrammarQuiz(choice) {
+            const feed = document.getElementById('quiz-feedback');
+            if (choice === 'is') {
+                feed.className = "feedback correct";
+                feed.innerHTML = "<strong>Correct!</strong> 'Manager' is singular and closest to the blank, so 'is' matches perfectly!";
+                speakText("Excellent work! That is correct.");
             } else {
-                feedbackContainer.className = "feedback wrong";
-                feedbackContainer.innerHTML = "<strong>Incorrect Match.</strong> Scan the closest neighboring target subject: 'employees' is plural, so it rejects the singular verb form 'is'.";
-                speakText("Incorrect choice. Please look closer at the nearest subject word, employees.");
+                feed.className = "feedback wrong";
+                feed.innerHTML = "<strong>Try again!</strong> 'Manager' is singular. The proximity rule tells us to ignore the plural 'supervisors' because it is further away.";
+                speakText("Let's look closely at the closest subject.");
             }
         }
 
-        // Web Speech Recognition Audio Feedback Logic
-        function toggleSpeechRecognition() {
-            const SpeechEngineClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechEngineClass) {
-                alert("Live speech feedback is not supported natively by this web browser. Try Google Chrome or Microsoft Edge!");
+        // Advanced Automated Speech Assessment Engine 
+        function startSpeechLab(taskId, exactTargetPhrase) {
+            const SpeechLibrary = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechLibrary) {
+                alert("Speech feedback requires Google Chrome or Microsoft Edge desktop browsers.");
                 return;
             }
 
-            const btn = document.getElementById('recordBtn');
-            const outputSpan = document.getElementById('transcriptionOutput');
+            const targetMicButton = document.getElementById(`mic-${taskId}`);
+            const textOutputDisplay = document.getElementById(`output-${taskId}`);
 
-            if (!recognitionEngine) {
-                recognitionEngine = new SpeechEngineClass();
-                recognitionEngine.continuous = false;
-                recognitionEngine.lang = 'en-US';
-                
-                recognitionEngine.onstart = () => {
-                    isRecordingVocal = true;
-                    btn.innerText = "Listening... Speak Now!";
-                    btn.classList.add('recording');
-                    outputSpan.innerText = "Awaiting your audio pronunciation stream...";
-                };
-
-                recognitionEngine.onresult = (event) => {
-                    const generatedTextResult = event.results[0][0].transcript;
-                    outputSpan.innerHTML = `<strong>We heard:</strong> "${generatedTextResult}"`;
-                };
-
-                recognitionEngine.onerror = () => {
-                    outputSpan.innerText = "An error occurred with your microphone access.";
-                    stopRecordingState(btn);
-                };
-
-                recognitionEngine.onend = () => {
-                    stopRecordingState(btn);
-                };
+            if (activeRecordingState) {
+                if (speechRecognitionInstance) speechRecognitionInstance.stop();
+                return;
             }
 
-            if (!isRecordingVocal) {
-                recognitionEngine.start();
-            } else {
-                recognitionEngine.stop();
-            }
+            speechRecognitionInstance = new SpeechLibrary();
+            speechRecognitionInstance.continuous = false;
+            speechRecognitionInstance.lang = 'en-US';
+
+            speechRecognitionInstance.onstart = () => {
+                activeRecordingState = true;
+                targetMicButton.innerText = "Listening...";
+                targetMicButton.classList.add('recording');
+                textOutputDisplay.innerText = "Say the phrase now...";
+            };
+
+            speechRecognitionInstance.onresult = (event) => {
+                const spokenResultRaw = event.results[0][0].transcript;
+                const normalizedSpoken = spokenResultRaw.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+                const normalizedTarget = exactTargetPhrase.toLowerCase().trim();
+
+                let evaluationString = `<strong>Pronunciation Match Result:</strong> "${spokenResultRaw}"<br>`;
+                if (normalizedSpoken === normalizedTarget) {
+                    evaluationString += "<span style='color:green; font-weight:bold;'>Perfect Match! 100% Accuracy on target vowel structures!</span>";
+                    speakText("Perfect pronunciation!");
+                } else {
+                    evaluationString += "<span style='color:var(--accent); font-weight:bold;'>Good try! Check the model recording button and try matching the vowel lengths again.</span>";
+                }
+                textOutputDisplay.innerHTML = evaluationString;
+            };
+
+            speechRecognitionInstance.onerror = () => {
+                textOutputDisplay.innerText = "Microphone connection timed out or was blocked.";
+                resetMicState(targetMicButton);
+            };
+
+            speechRecognitionInstance.onend = () => {
+                resetMicState(targetMicButton);
+            };
+
+            speechRecognitionInstance.start();
         }
 
-        function stopRecordingState(btnElement) {
-            isRecordingVocal = false;
-            btnElement.innerText = "Start Recording Practice";
-            btnElement.classList.remove('recording');
+        function resetMicState(btn) {
+            activeRecordingState = false;
+            btn.innerText = "Start Recording";
+            btn.classList.remove('recording');
         }
     </script>
 </body>
