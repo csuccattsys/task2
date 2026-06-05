@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 2: Interactive Language Learning Quest</title>
+    <style>
+        :root {
+            --primary-green: #1b5e20;
+            --accent-green: #8bc34a;
+            --light-bg: #f4f9f4;
+            --text-dark: #212121;
+            --trap-red: #c62828;
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f5e9;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            background-color: white;
+            max-width: 650px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border-top: 8px solid var(--primary-green);
+        }
+
+        .header {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content-panel {
+            padding: 30px;
+        }
+
+        .scene-title {
+            color: var(--primary-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .narrative-box {
+            background-color: var(--light-bg);
+            border-left: 4px solid var(--accent-green);
+            padding: 20px;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-green);
+            background-color: var(--light-bg);
+            transform: translateY(-2px);
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback-box.trap {
+            display: block;
+            background-color: #ffebee;
+            border: 1px solid var(--trap-red);
+            color: #b71c1c;
+        }
+
+        .feedback-box.success {
+            display: block;
+            background-color: #e8f5e9;
+            border: 1px solid var(--success-green);
+            color: #1b5e20;
+        }
+
+        .action-btn {
+            margin-top: 15px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+        }
+
+        .action-btn:hover {
+            background-color: #0d3c12;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="header">
+        <h1>THE LOST AMULET OF RHETORIC</h1>
+        <p>Grade 7 Figures of Speech Interactive Mission</p>
+    </div>
+    
+    <div class="content-panel">
+        <div id="scene-title" class="scene-title">Loading Mission...</div>
+        <div id="narrative" class="narrative-box"></div>
+        
+        <div id="options" class="options-container"></div>
+        
+        <div id="feedback" class="feedback-box"></div>
+        
+        <div class="clearfix">
+            <button id="next-btn" class="action-btn" style="display: none;">Advance Path →</button>
+            <button id="retry-btn" class="action-btn" style="display: none; background-color: var(--trap-red);">Try Again ↻</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const storyData = {
+        1: {
+            title: "Scene 1: The Jungle Entrance",
+            narrative: "You stand before the ancient stone ruins of Cabadbaran. Over the crumbling archway, a glowing inscription reads: 'The classroom was a zoo during recess.' A stone guardian blocks the path and booms, 'Identify the spell fueling this riddle, or remain locked outside forever!'",
+            choices: [
+                {
+                    text: "Choice A: Use a Simile Key.",
+                    status: "trap",
+                    feedback: "🛑 <strong>Trap Triggered!</strong> The ground shakes violently. The guardian frowns: 'A simile demands comparison words such as \"like\" or \"as\"! Step back and recalibrate your mind.'"
+                },
+                {
+                    text: "Choice B: Whisper the keyword: 'Metaphor'.",
+                    status: "success",
+                    feedback: "✨ <strong>Success Path!</strong> The massive stone arch slides open with a rumble. 'Correct! You recognized a direct equation of a chaotic classroom to a zoo without relying on connectors. Advance into the courtyard!'",
+                    nextScene: 2
+                }
+            ]
+        },
+        2: {
+            title: "Scene 2: The Whispering Courtyard",
+            narrative: "You step into a courtyard overgrown with shifting flora. Suddenly, a cold breeze sweeps through: 'The autumn leaves scraped across the pavement, whispering secrets to the wind.' The air coalesces into a swirling face. 'What magic powers my voice?' it demands.",
+            choices: [
+                {
+                    text: "Choice A: Shout 'Personification!' into the gale.",
+                    status: "success",
+                    feedback: "✨ <strong>Success Path!</strong> The vaporous face smiles and disperses into safe, glowing path markers. 'Precisely! You recognized human traits—whispering secrets—instilled into inanimate autumn leaves. The inner vault opens!'",
+                    nextScene: 3
+                },
+                {
+                    text: "Choice B: Cast a Metaphor Shield.",
+                    status: "trap",
+                    feedback: "🛑 <strong>Trap Triggered!</strong> The wind knocks your avatar back onto the stone tiles. 'Incorrect! I am not merely equating two entities; I am imbuing nature with human actions! Try again.'"
+                }
+            ]
+        },
+        3: {
+            title: "Scene 3: The Hunger Crypt",
+            narrative: "Deep within the catacombs, the final golden chest sits waiting. Guarding it is a giant ruby-eyed golem. He stomps his fist and bellows: 'I am so hungry I could eat an entire elephant right now! Name the figure of speech that anchors my declaration, or turn back!'",
+            choices: [
+                {
+                    text: "Choice A: Identify it as a Simile.",
+                    status: "trap",
+                    feedback: "🛑 <strong>Trap Triggered!</strong> The golem growls and brandishes his fist. 'Where is the structural connector word \"like\" or \"as\" in my statement? Your path ends unless you fix this mistake!'"
+                },
+                {
+                    text: "Choice B: Declare it a Hyperbole.",
+                    status: "success",
+                    feedback: "🏆 <strong>Quest Complete!</strong> The golem laughs heartily, converting his stony form into a harmless pile of gems. 'Splendid! You unmasked my extreme exaggeration for what it is. The Ancient Amulet of Rhetoric belongs to you!'",
+                    nextScene: 'end'
+                }
+            ]
+        }
+    };
+
+    let currentScene = 1;
+
+    function renderScene(sceneId) {
+        if(sceneId === 'end') {
+            document.getElementById('scene-title').innerText = "🏆 Victory Achieved!";
+            document.getElementById('narrative').innerText = "Congratulations! You safely bypassed all three linguistic trial chambers, proved your mastery over figures of speech, and completed the Task 2 Interactive Module!";
+            document.getElementById('options').innerHTML = "";
+            document.getElementById('feedback').style.display = "none";
+            document.getElementById('next-btn').style.display = "none";
+            document.getElementById('retry-btn').style.display = "none";
+            return;
+        }
+
+        const scene = storyData[sceneId];
+        document.getElementById('scene-title').innerText = scene.title;
+        document.getElementById('narrative').innerText = scene.narrative;
+        
+        // Hide control buttons initially
+        document.getElementById('next-btn').style.display = "none";
+        document.getElementById('retry-btn').style.display = "none";
+        document.getElementById('feedback').className = "feedback-box";
+        document.getElementById('feedback').style.display = "none";
+
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = "";
+
+        scene.choices.forEach(choice => {
+            const button = document.createElement('button');
+            button.className = 'option-btn';
+            button.innerText = choice.text;
+            button.onclick = () => handleChoice(choice);
+            optionsContainer.appendChild(button);
+        });
+    }
+
+    function handleChoice(choice) {
+        const feedbackDiv = document.getElementById('feedback');
+        feedbackDiv.innerHTML = choice.feedback;
+        
+        // Disable option choices once picked
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.disabled = true);
+
+        if(choice.status === 'success') {
+            feedbackDiv.className = "feedback-box success";
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.style.display = "block";
+            nextBtn.onclick = () => {
+                currentScene = choice.nextScene;
+                renderScene(currentScene);
+            };
+        } else {
+            feedbackDiv.className = "feedback-box trap";
+            const retryBtn = document.getElementById('retry-btn');
+            retryBtn.style.display = "block";
+            retryBtn.onclick = () => {
+                renderScene(currentScene); // Reset current scene setup
+            };
+        }
+    }
+
+    // Start Game
+    renderScene(currentScene);
+</script>
+
+</body>
+</html>
